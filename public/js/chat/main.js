@@ -57,3 +57,10 @@ socket.on('mov.fichas.custom1', function(num, posoriginal, posoriginal1, nomjug)
     	'margin-left': posoriginal1+"px",
   	}, 3000);
 });
+
+//
+
+socket.on('mostrar-casilla', function(data){
+	var cas = document.getElementsByClassName("mostrar-casilla");
+	cas[0].setAttribute("src", data);
+});

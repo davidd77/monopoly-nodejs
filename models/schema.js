@@ -12,3 +12,8 @@ var Msg = mongoose.model("Msg", msg_schema);
 module.exports.msg = Msg;
 
 
+var casillas = {num:Number, Nombre:String, precio:Number, url:String};
+var casillas_schema = new Schema(casillas);
+var Cas = mongoose.model("Casillas", casillas_schema);
+
+module.exports.cas = Cas;

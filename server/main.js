@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var Msg = require('../models/schema').msg;
+var Cas = require('../models/schema').cas;
 var ruta = require('../routes/routes.main');
 // inside middleware handler 
 idcasilla = [0,0,0,0];
@@ -15,7 +16,6 @@ mov[3] = [700,700];
 
 var turno = 0;
 var arrayips = [];
-
 app.set("view engine", "ejs");
 
 
@@ -109,8 +109,12 @@ io.on('connection', function(socket) {
 					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], nomjug[turno]);
 				}
 			}
-
-
+			url = "";
+			Cas.find({num:idcasilla[turno]}, function(err, casnumber){ 
+				casnumber.map(function(elem, index){ 
+					socket.emit("mostrar-casilla", elem.url);
+				}); 
+			});
 			//Cambia de turno
 			turno++;
 			if(turno == 2){

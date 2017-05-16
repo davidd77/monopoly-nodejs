@@ -34,21 +34,32 @@
 			margin-left: 700px;
 			margin-top: 700px;
 		}
-		.wrap{
+		.tab-piezas{
 			float: right;
+			margin-right: 795px;
+		}
+		.mostrar-casilla{
+			position: absolute;
+			margin-top: 500px;
+		}
+		.wrap{
+			position: absolute;
 		}
 	</style>
 </head>
 <body>
-	<div style="display:none" class="wrap">
-   		<div id="dice" class="dice dice_1"></div>
-   		<div id="dice2" class="dice dice_1"></div>
-    </div>
-    <button type="button" id="result">Dados</button>
+    <div class="tab-piezas">
 	<img class="tablero" src="/img/tablero-monopolio.jpg">
 	<img class="piezajug1" src="/img/pieza1.png">
 	<img class="piezajug2" src="/img/pieza2.png">
 	<img class="piezajug3" src="/img/pieza3.png">
 	<img class="piezajug4" src="/img/pieza4.png">
+	</div>
+	<button type="button" id="result">Dados</button>
+	<div style="display:none" class="wrap">
+   		<div id="dice" class="dice dice_1"></div>
+   		<div id="dice2" class="dice dice_1"></div>
+    </div>
+    <img class="mostrar-casilla" src="/img/casillas/free-parking.jpg">
 </body>
 </html>
