@@ -37,6 +37,72 @@
 }
 
 /*botones*/
-input{
+.chattext{
 	margin-top: 200px;
+}
+
+
+
+.tablero{
+	width: 800px;
+	position: absolute;
+}
+.piezajug2{
+	width: 40px;
+	margin-left: 700px;
+	margin-top: 700px;
+}
+.piezajug3{
+	width: 40px;
+	margin-left: 700px;
+	margin-top: 700px;	
+}
+.piezajug4{
+	width: 40px;
+	margin-left: 700px;
+	margin-top: 700px;
+}
+.piezajug1{
+	width: 40px;
+	margin-left: 700px;
+	margin-top: 700px;
+}
+.tab-piezas{
+	float: right;
+	margin-right: 795px;
+}
+.mostrar-casilla{
+	margin-top: 500px;
+	position: absolute;
+	margin-left: 700px;
+}
+.wrap{
+	position: absolute;
+	width: 300px;
+	margin-top: 500px;
+	margin-left: 450px;
+}
+#messages{
+	position: absolute;
+	margin-top: 500px;
+	overflow-y: auto;
+	height: 200px;
+	width: 400px;
+}
+.chat{
+	margin-top: 500px;
+	position: absolute;
+	height: 10px;
+}
+.form-buscar{
+	position: absolute;
+}
+.buscar{
+	position: absolute;
+	margin-top: 70px;
+}
+#result{
+	margin-top: 700px;
+	margin-left: 500px;
+	position: absolute;
 }

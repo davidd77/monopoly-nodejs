@@ -8,6 +8,9 @@ var ruta = require('../routes/routes.main');
 // inside middleware handler 
 idcasilla = [0,0,0,0];
 nomjug = [".piezajug1",".piezajug2",".piezajug3",".piezajug4"];
+nom = ["Jugador1","Jugador2","Jugador3","Jugador4"];
+colores = ["red", "blue", "green", "yelow"];
+dinero = [1500,1500,1500,1500];
 mov = new Array(4);
 mov[0] = [700,700];
 mov[1] = [700,700];
@@ -36,19 +39,32 @@ app.use("/", ruta);
 io.on('connection', function(socket) {
 	if(arrayips.length <4){
 		var address = socket.handshake;
-		arrayips.push(address.address);
-		console.log("Usuario conectado");
+		var dis = false;
+		for(var x = 0; x<arrayips.length; x++){
+			if(address.address == arrayips[x]){
+				dis = true;
+				socket.emit("nombre", nom[x], colores[x], dinero[x]);
+			}
+		}
+		if(dis==false){
+			arrayips.push(address.address);
+			socket.emit("nombre", nom[arrayips.length-1], colores[arrayips.length-1], dinero[arrayips.length-1]);
+			console.log("Usuario conectado");
+		}
 	}else{
 		console.log("Limite superado");
+		socket.emit("nombre", "pendeja");
 	}
+
+	socket.emit("posiciones", mov);
+	socket.emit("messages", messages);
 
 	//Chat
 	console.log('Alguien se ha conectado con Sockets');
 	console.log(arrayips);
 	socket.on('new.message', function(data){
-		socket.emit("messages", messages);
 			messages.push(data);
-			var mensaje = new Msg({autor:socket.id, texto:data.text}); 
+			var mensaje = new Msg({autor:data.author, texto:data.text}); 
 			mensaje.save(function(err){ console.log(err); });
 			io.sockets.emit("messages", messages);
 	});
@@ -122,6 +138,21 @@ io.on('connection', function(socket) {
 			}
 		}
 	});
+
+	socket.on("buscar.casilla", function(id){
+		url = "";
+		Cas.find({num:id}, function(err, casnumber){ 
+			casnumber.map(function(elem, index){ 
+				socket.emit("mostrar-casilla-buscador", elem.url);
+			}); 
+		});
+	})
+	//Usuario desconectado
+	/*socket.on("disconnect", function(){
+		for(var x=0; x<2; x++){
+			if()
+		}
+	});*/
 });
 
 

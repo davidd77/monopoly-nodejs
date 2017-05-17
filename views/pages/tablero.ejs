@@ -10,44 +10,19 @@
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script src="/jquery/dice.js"></script>
 	<style>
-		.tablero{
-			width: 800px;
+		.marcador{
+			border: 1px solid black;
+			width: 500px;
+			height: 50px;
 			position: absolute;
-		}
-		.piezajug2{
-			width: 40px;
-			margin-left: 700px;
-			margin-top: 700px;
-		}
-		.piezajug3{
-			width: 40px;
-			margin-left: 700px;
-			margin-top: 700px;	
-		}
-		.piezajug4{
-			width: 40px;
-			margin-left: 700px;
-			margin-top: 700px;
-		}
-		.piezajug1{
-			width: 40px;
-			margin-left: 700px;
-			margin-top: 700px;
-		}
-		.tab-piezas{
-			float: right;
-			margin-right: 795px;
-		}
-		.mostrar-casilla{
-			position: absolute;
-			margin-top: 500px;
-		}
-		.wrap{
-			position: absolute;
+			margin-left: 520px;
 		}
 	</style>
 </head>
 <body>
+	<div class="marcador">
+		<div class="cantidad"></div>
+	</div>
     <div class="tab-piezas">
 	<img class="tablero" src="/img/tablero-monopolio.jpg">
 	<img class="piezajug1" src="/img/pieza1.png">
@@ -60,6 +35,45 @@
    		<div id="dice" class="dice dice_1"></div>
    		<div id="dice2" class="dice dice_1"></div>
     </div>
+    <form class="form-buscar" onchange="return addbuscar(this)">
+    	<select>
+    	  <option value="0">Elige una casilla</option>
+		  <option value="1">Ronda de Valencia</option>
+		  <option value="3">Plaza Lavapiés</option>
+		  <option value="5">Estación de Goya</option>
+		  <option value="6">Glorieta Cuatro Caminos</option>
+		  <option value="8">Avenida de Reina Victoria</option>
+		  <option value="9">Calle Bravo Murillo</option>
+		  <option value="11">Glorieta de Bilbao</option>
+		  <option value="12">Compañia de la electricidad</option>
+		  <option value="13">Calle Alberto Aguilera</option>
+		  <option value="14">Calle Fuencarral</option>
+		  <option value="15">Estación de las Delicias</option>
+		  <option value="16">AVDA Felipe II</option>
+		  <option value="18">Calle Velázquez</option>
+		  <option value="19">Calle Serrano</option>
+		  <option value="21">Avenida de America</option>
+		  <option value="23">Calle María de molina</option>
+		  <option value="24">Calle de Cea Bermúdez</option>
+		  <option value="25">Estación del mediodia</option>
+		  <option value="26">Avenida de los reyes catolicos</option>
+		  <option value="27">Calle Bailén</option>
+		  <option value="28">Compañia distribucion de aguas</option>
+		  <option value="29">Plaza de España</option>
+		  <option value="31">Puerta de Sol</option>
+		  <option value="32">Calle de Alcalá</option>
+		  <option value="34">Gran via</option>
+		  <option value="35">Estación del norte</option>
+		  <option value="37">Paseo de la Castellana</option>
+		  <option value="39">Paseo del Prado</option>
+		</select> 
+	</form>
+    <img class="buscar" src=""> 
+    <div id="messages"></div>	
+	<form class="chat" onsubmit="return addMessage(this)">
+		<input class="chattext" type="text" id="texto" placeholder="Cuéntanos algo..">
+		<input class="chattext" id="mess" type="submit" value="Enviar!">
+	</form>
     <img class="mostrar-casilla" src="/img/casillas/free-parking.jpg">
 </body>
 </html>

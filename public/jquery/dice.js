@@ -3,7 +3,7 @@ $(function(){
 	var dice2 = $("#dice2");
 	var button = $("#result");
 	button.click(function(){
-		$(".wrap").css("display", "block");
+		$(".wrap").css("display", "inline-flex");
 		$(".wrap").append("<div id='dice_mask'></div>");//add mask
 		dice.attr("class","dice");//After clearing the last points animation
 		dice.css('cursor','default');
@@ -91,5 +91,10 @@ $(function(){
 			$(".wrap").css("display", "none");
 		}, 3000);
 		mover(num, num2);
+	});
+
+	var chat = $("#mess");
+	chat.click(function(){
+		$("#messages").animate({ scrollTop: $('#messages')[0].scrollHeight}, 0);
 	});
 });
