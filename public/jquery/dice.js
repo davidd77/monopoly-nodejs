@@ -97,4 +97,12 @@ $(function(){
 	chat.click(function(){
 		$("#messages").animate({ scrollTop: $('#messages')[0].scrollHeight}, 0);
 	});
+
+
+	$(".comprar").click(function(){
+		comprarpropiedad();
+	});
+	$(".nocomprar").click(function(){
+		nocomprarpropiedad();
+	});
 });

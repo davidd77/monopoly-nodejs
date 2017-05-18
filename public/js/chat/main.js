@@ -1,10 +1,11 @@
 var socket = io.connect("192.168.12.130:8080", { 'forceNew': true});
 
 nombrejug = "";
+id = null;
 
 socket.on("nombre", function(data, color, dinero){
 	nombrejug=data;
-	document.getElementsByClassName("marcador")[0].innerHTML = nombrejug;
+	document.getElementsByClassName("marcador1")[0].innerHTML = nombrejug;
 	document.getElementsByClassName("cantidad")[0].innerHTML = dinero;
 	$(".marcador").css("background-color", color);
 });
@@ -103,3 +104,34 @@ socket.on('mostrar-casilla', function(data){
 });
 //Fin mostrar casilla
 
+
+socket.on("comprar", function(data){
+	id = data;
+	$(".comprar").prop("disabled", false);
+	$(".nocomprar").prop("disabled", false);
+});
+socket.on("bloquear", function(){
+	$("#result").prop("disabled", true);
+});
+
+
+function comprarpropiedad(){
+	socket.emit("compra", id);
+}
+
+socket.on("compra.definitiva", function(dinero){
+	document.getElementsByClassName("cantidad")[0].innerHTML = dinero;
+	$(".comprar").prop("disabled", true);
+	$(".nocomprar").prop("disabled", true);
+});
+
+socket.on("desbloquear", function(){
+	$("#result").prop("disabled", false);
+});
+
+
+function nocomprarpropiedad(){
+	socket.emit("nocomprar");
+	$(".comprar").prop("disabled", true);
+	$(".nocomprar").prop("disabled", true);
+};

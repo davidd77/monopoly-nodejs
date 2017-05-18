@@ -16,7 +16,6 @@ mov[0] = [700,700];
 mov[1] = [700,700];
 mov[2] = [700,700];
 mov[3] = [700,700];
-
 var turno = 0;
 var arrayips = [];
 app.set("view engine", "ejs");
@@ -132,6 +131,8 @@ io.on('connection', function(socket) {
 				}); 
 			});
 			//Cambia de turno
+			socket.emit("comprar", idcasilla[turno]);
+			io.sockets.emit("bloquear");
 			turno++;
 			if(turno == 2){
 				turno = 0;
@@ -140,7 +141,6 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on("buscar.casilla", function(id){
-		url = "";
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
 				socket.emit("mostrar-casilla-buscador", elem.url);
@@ -153,6 +153,30 @@ io.on('connection', function(socket) {
 			if()
 		}
 	});*/
+
+
+	//Compra de casilla
+	socket.on("compra", function(id){
+		Cas.find({num:id}, function(err, casnumber){ 
+			casnumber.map(function(elem, index){ 
+				if(turno == 0){
+					console.log("Hola");
+					dinero[1] = dinero[1]-elem.precio;
+					socket.emit("compra.definitiva", dinero[1]);
+					io.sockets.emit("desbloquear");
+				}else{
+					dinero[turno-1] = dinero[turno-1] - elem.precio;
+					socket.emit("compra.definitiva", dinero[turno-1]);
+					io.sockets.emit("desbloquear");
+				}
+			}); 
+		});
+
+	});
+
+	socket.on("nocomprar", function(){
+		io.sockets.emit("desbloquear");
+	})
 });
 
 

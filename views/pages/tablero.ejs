@@ -17,10 +17,25 @@
 			position: absolute;
 			margin-left: 520px;
 		}
+		.comprar{
+			position: absolute;
+			width: 266px;
+			height: 50px;
+			margin-top: 380px;
+			margin-left: 700px;
+		}
+		.nocomprar{
+			position: absolute;
+			margin-top: 440px;
+			margin-left: 700px;
+			width: 266px;
+			height: 50px;
+		}
 	</style>
 </head>
 <body>
 	<div class="marcador">
+		<div class="marcador1"></div>
 		<div class="cantidad"></div>
 	</div>
     <div class="tab-piezas">
@@ -74,6 +89,8 @@
 		<input class="chattext" type="text" id="texto" placeholder="Cuéntanos algo..">
 		<input class="chattext" id="mess" type="submit" value="Enviar!">
 	</form>
+	<button class="comprar" disabled>Comprar</button>
+	<button class="nocomprar" disabled>No Comprar</button>
     <img class="mostrar-casilla" src="/img/casillas/free-parking.jpg">
 </body>
 </html>
