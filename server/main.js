@@ -4,13 +4,22 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var Msg = require('../models/schema').msg;
 var Cas = require('../models/schema').cas;
+var precios = require('../models/schema').precio;
 var ruta = require('../routes/routes.main');
-// inside middleware handler 
-idcasilla = [0,0,0,0];
-nomjug = [".piezajug1",".piezajug2",".piezajug3",".piezajug4"];
-nom = ["Jugador1","Jugador2","Jugador3","Jugador4"];
+var jug = require('../clases/jugador');
+
+//Objetos
+jugador = new Array(4);
+jugador[0] = new jug("Jugador1", 0, ".piezajug1", 1500);
+jugador[1] = new jug("Jugador2", 0, ".piezajug2", 1500);
+jugador[2] = new jug("Jugador3", 0, ".piezajug3", 1500);
+jugador[3] = new jug("Jugador4", 0, ".piezajug4", 1500);
+
+//Variables
 colores = ["red", "blue", "green", "yelow"];
-dinero = [1500,1500,1500,1500];
+suertecaja = [2,7,17,22,33,35];
+casillasesp = [0,4,10,20,30,38];
+impuestos = 0;
 mov = new Array(4);
 mov[0] = [700,700];
 mov[1] = [700,700];
@@ -18,10 +27,12 @@ mov[2] = [700,700];
 mov[3] = [700,700];
 var turno = 0;
 var arrayips = [];
+
+//Llamada a la vista
 app.set("view engine", "ejs");
 
 
-//Llamada a la base de datos
+//Llamada al schema de mensajes
 var messages = [];
 Msg.find({}, function(err, mensajes){ 
 	mensajes.map(function(elem, index){ 
@@ -42,17 +53,17 @@ io.on('connection', function(socket) {
 		for(var x = 0; x<arrayips.length; x++){
 			if(address.address == arrayips[x]){
 				dis = true;
-				socket.emit("nombre", nom[x], colores[x], dinero[x]);
+				socket.emit("nombre", jugador[x].getNom(), colores[x], jugador[x].getdinero());
 			}
 		}
 		if(dis==false){
 			arrayips.push(address.address);
-			socket.emit("nombre", nom[arrayips.length-1], colores[arrayips.length-1], dinero[arrayips.length-1]);
+			socket.emit("nombre", jugador[arrayips.length-1].getNom(), colores[arrayips.length-1], jugador[arrayips.length-1].getdinero());
 			console.log("Usuario conectado");
 		}
 	}else{
 		console.log("Limite superado");
-		socket.emit("nombre", "pendeja");
+		socket.emit("nombre", "Espectador");
 	}
 
 	socket.emit("posiciones", mov);
@@ -70,69 +81,129 @@ io.on('connection', function(socket) {
 
 
 	//Movimiento fichas
-	socket.on('mov.fichas', function(data){
+	socket.on('mov.fichas', function(data, nom){
 		var address = socket.handshake;
 		if(arrayips[turno] == address.address){
 
 			//Movimiento
-			if(idcasilla[turno]<10){
-				if(data+idcasilla[turno]<=10){
-					idcasilla[turno] = idcasilla[turno] + data;
+			if(jugador[turno].getid()<10){
+				if(data+jugador[turno].getid()<=10){
+					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] - data*65;
-					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], nomjug[turno]);
+					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], jugador[turno].getpieza());
 				}else{
-					var custommov = 10-idcasilla[turno];
-					idcasilla[turno] = idcasilla[turno] + data;
+					var custommov = 10-jugador[turno].getid();
+					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] - custommov*65;
 					mov[turno][1] = mov[turno][1] - (data-custommov)*65;
-					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], nomjug[turno]);
+					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza());
 				}
-			}else if(idcasilla[turno]>=10 && idcasilla[turno]<20){
-				if(data+idcasilla[turno]<=20){
-					idcasilla[turno] = idcasilla[turno] + data;
+			}else if(jugador[turno].getid()>=10 && jugador[turno].getid()<20){
+				if(data+jugador[turno].getid()<=20){
+					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] - data*65;
-					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], nomjug[turno]);
+					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], jugador[turno].getpieza());
 				}else{
-					var custommov = 20-idcasilla[turno];
-					idcasilla[turno] = idcasilla[turno] + data;
+					var custommov = 20-jugador[turno].getid();
+					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] - custommov*65;
 					mov[turno][0] = mov[turno][0] + (data-custommov)*65;
-					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], nomjug[turno]);
+					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
 				}
-			}else if(idcasilla[turno]>=20 && idcasilla[turno]<30){
-				if(data+idcasilla[turno]<=30){
-					idcasilla[turno] = idcasilla[turno] + data;
+			}else if(jugador[turno].getid()>=20 && jugador[turno].getid()<30){
+				if(data+jugador[turno].getid()<=30){
+					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] + data*65;
-					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], nomjug[turno]);
+					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], jugador[turno].getpieza());
 				}else{
-					var custommov = 30-idcasilla[turno];
-					idcasilla[turno] = idcasilla[turno] + data;
+					var custommov = 30-jugador[turno].getid();
+					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] + custommov*65;
 					mov[turno][1] = mov[turno][1] + (data-custommov)*65;
-					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], nomjug[turno]);
+					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza());
 				}
 			}else{
-				if(data+idcasilla[turno]<=39){
-					idcasilla[turno] = idcasilla[turno] + data;
+				if(data+jugador[turno].getid()<=39){
+					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] + data*65;
-					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], nomjug[turno]);
+					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], jugador[turno].getpieza());
 				}else{
-					var custommov = 40-idcasilla[turno];
-					idcasilla[turno] = (data-custommov);
+					//jugador[turno].salida(200);
+					//socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+					var custommov = 40-jugador[turno].getid();
+					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] + custommov*65;
 					mov[turno][0] = mov[turno][0] - (data-custommov)*65;
-					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], nomjug[turno]);
+					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
 				}
 			}
+			console.log(jugador[turno].getid());
 			url = "";
-			Cas.find({num:idcasilla[turno]}, function(err, casnumber){ 
+			Cas.find({num:jugador[turno].getid()}, function(err, casnumber){ 
 				casnumber.map(function(elem, index){ 
 					socket.emit("mostrar-casilla", elem.url);
 				}); 
 			});
+			
+			//Comprobacion suerte/caja
+			sc = false; //sc = suerte y caja
+			for(var x=0; x<suertecaja.length; x++){
+				if(jugador[turno].getid() == suertecaja[x]){
+					sc = true;
+				}
+			}
+
+			//Comprobacion de salida, carcel, parking y impuestos
+			cesp = false
+			for(var x=0; x<casillasesp.length; x++){
+				if(jugador[turno].getid() == casillasesp[x]){
+					cesp = true;
+					if(casillasesp[x] == 30){
+						jugador[turno].carcel();
+						mov[turno][1] = mov[turno][1] + 10*65;
+						mov[turno][0] = mov[turno][0] - 10*65;
+						io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
+					}else if(casillasesp[x] == 4 || casillasesp[x] == 38){
+						jugador[turno].impuestos();
+						Cas.find({num:jugador[turno].getid()}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+								jugador[turno].alquiler(elem.precio);
+								impuestos = impuestos + elem.precio;
+								socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+							});
+						});
+					}else if(casillasesp[x] == 20){
+						jugador[turno].parking(impuestos);
+						socket.emit("alquiler/impuestos", jugador[turno].getdinero());	
+					}
+				}
+			}
+
+			//Si sc == true o cesp==true no se le activaran las opciones de comprar y no comprar
+			if(sc==false && cesp==false){
+				var propiedadjug1 = jugador[0].comprobarpropiedad(jugador[turno].getid());
+				var propiedadjug2 = jugador[1].comprobarpropiedad(jugador[turno].getid());
+
+				if(propiedadjug1==true || propiedadjug2==true){
+					if(propiedadjug1==true && jugador[turno].getNom() == jugador[0].getNom()){
+						console.log("Propiedad del mismo jugador");
+					}else if(propiedadjug2 == true && jugador[turno].getNom() == jugador[1].getNom()){
+						console.log("Propiedad del mismo jugador");
+					}else{
+						precios.find({num:jugador[turno].getid()}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+								jugador[turno].alquiler(elem.alquiler);
+								socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+							});
+						});
+					}
+				}else{
+					socket.emit("comprar", jugador[turno].getid());
+					io.sockets.emit("bloquear");
+				}
+			}
+
 			//Cambia de turno
-			socket.emit("comprar", idcasilla[turno]);
-			io.sockets.emit("bloquear");
 			turno++;
 			if(turno == 2){
 				turno = 0;
@@ -160,13 +231,12 @@ io.on('connection', function(socket) {
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
 				if(turno == 0){
-					console.log("Hola");
-					dinero[1] = dinero[1]-elem.precio;
-					socket.emit("compra.definitiva", dinero[1]);
+					jugador[1].comprar(elem.precio, elem.num);
+					socket.emit("compra.definitiva", jugador[1].getdinero());
 					io.sockets.emit("desbloquear");
 				}else{
-					dinero[turno-1] = dinero[turno-1] - elem.precio;
-					socket.emit("compra.definitiva", dinero[turno-1]);
+					jugador[turno-1].comprar(elem.precio, elem.num);
+					socket.emit("compra.definitiva", jugador[turno-1].getdinero());
 					io.sockets.emit("desbloquear");
 				}
 			}); 
@@ -174,6 +244,8 @@ io.on('connection', function(socket) {
 
 	});
 
+
+	//No comprar casilla
 	socket.on("nocomprar", function(){
 		io.sockets.emit("desbloquear");
 	})

@@ -77,7 +77,7 @@ var nueva = new Cas({num:33, Nombre:"Caja de Comunidad", precio:0, url:"/img/cas
 nueva.save(function(err){ console.log(err); });
 var nueva = new Cas({num:34, Nombre:"Gran via", precio:320, url:"/img/casillas/calle_gran_via.png"});
 nueva.save(function(err){ console.log(err); });
-var nueva = new Cas({num:35, Nombre:"Estación del norte", precio:200, url:"/img/casillas/estacion_del_norte"});
+var nueva = new Cas({num:35, Nombre:"Estación del norte", precio:200, url:"/img/casillas/estacion_del_norte.png"});
 nueva.save(function(err){ console.log(err); });
 var nueva = new Cas({num:36, Nombre:"Suerte", precio:0, url:"/img/casillas/free-parking.jpg"});
 nueva.save(function(err){ console.log(err); });

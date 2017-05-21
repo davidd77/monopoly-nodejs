@@ -1,4 +1,4 @@
-var socket = io.connect("192.168.12.130:8080", { 'forceNew': true});
+var socket = io.connect("192.168.1.149:8080", { 'forceNew': true});
 
 nombrejug = "";
 id = null;
@@ -65,7 +65,7 @@ function addMessage(e) {
 //Movimiento fichas
 function mover(num, num2){
 	numsum = num+num2;
-	socket.emit("mov.fichas", numsum);
+	socket.emit("mov.fichas", numsum, nombrejug);
 }
 socket.on('mov.fichas.lateral', function(num, posoriginal, nomjug){
 	$( nomjug ).animate({
@@ -105,6 +105,9 @@ socket.on('mostrar-casilla', function(data){
 //Fin mostrar casilla
 
 
+
+
+//Comprar/No comprar
 socket.on("comprar", function(data){
 	id = data;
 	$(".comprar").prop("disabled", false);
@@ -135,3 +138,11 @@ function nocomprarpropiedad(){
 	$(".comprar").prop("disabled", true);
 	$(".nocomprar").prop("disabled", true);
 };
+
+//Fin Comprar/No Comprar
+
+
+//Alquiler
+socket.on("alquiler/impuestos", function(dinero){
+	document.getElementsByClassName("cantidad")[0].innerHTML = dinero;
+})

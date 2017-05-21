@@ -17,3 +17,9 @@ var casillas_schema = new Schema(casillas);
 var Cas = mongoose.model("Casillas", casillas_schema);
 
 module.exports.cas = Cas;
+
+var precios = {num:Number, alquiler:Number, hipoteca:Number, preciocasa:Number, preciohotel:Number, casa1:Number, casa2:Number, casa3:Number, casa4:Number, hotel:Number};
+var precios_schema = new Schema(precios);
+var Pre = mongoose.model("Precios", precios_schema);
+
+module.exports.precio = Pre;
