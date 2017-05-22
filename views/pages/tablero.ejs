@@ -7,7 +7,7 @@
 	<script src="/js/tablero/tablero.js" charset="utf-8"></script>
 	<script src="/socket.io/socket.io.js" charset="utf-8"></script>
 	<script src="/js/chat/main.js" charset="utf-8"></script>
-	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/librerias/jquery-3.1.1.min.js" charset="utf-8"></script>
 	<script src="/jquery/dice.js"></script>
 	<style>
 		.marcador{
@@ -19,16 +19,16 @@
 		}
 		.comprar{
 			position: absolute;
-			width: 266px;
+			width: 133px;
 			height: 50px;
-			margin-top: 380px;
+			margin-top: 440px;
 			margin-left: 700px;
 		}
 		.nocomprar{
 			position: absolute;
 			margin-top: 440px;
-			margin-left: 700px;
-			width: 266px;
+			margin-left: 835px;
+			width: 133px;
 			height: 50px;
 		}
 	</style>
@@ -50,40 +50,42 @@
    		<div id="dice" class="dice dice_1"></div>
    		<div id="dice2" class="dice dice_1"></div>
     </div>
-    <form class="form-buscar" onchange="return addbuscar(this)">
-    	<select>
-    	  <option value="0">Elige una casilla</option>
-		  <option value="1">Ronda de Valencia</option>
-		  <option value="3">Plaza Lavapiés</option>
-		  <option value="5">Estación de Goya</option>
-		  <option value="6">Glorieta Cuatro Caminos</option>
-		  <option value="8">Avenida de Reina Victoria</option>
-		  <option value="9">Calle Bravo Murillo</option>
-		  <option value="11">Glorieta de Bilbao</option>
-		  <option value="12">Compañia de la electricidad</option>
-		  <option value="13">Calle Alberto Aguilera</option>
-		  <option value="14">Calle Fuencarral</option>
-		  <option value="15">Estación de las Delicias</option>
-		  <option value="16">AVDA Felipe II</option>
-		  <option value="18">Calle Velázquez</option>
-		  <option value="19">Calle Serrano</option>
-		  <option value="21">Avenida de America</option>
-		  <option value="23">Calle María de molina</option>
-		  <option value="24">Calle de Cea Bermúdez</option>
-		  <option value="25">Estación del mediodia</option>
-		  <option value="26">Avenida de los reyes catolicos</option>
-		  <option value="27">Calle Bailén</option>
-		  <option value="28">Compañia distribucion de aguas</option>
-		  <option value="29">Plaza de España</option>
-		  <option value="31">Puerta de Sol</option>
-		  <option value="32">Calle de Alcalá</option>
-		  <option value="34">Gran via</option>
-		  <option value="35">Estación del norte</option>
-		  <option value="37">Paseo de la Castellana</option>
-		  <option value="39">Paseo del Prado</option>
-		</select> 
-	</form>
-    <img class="buscar" src=""> 
+    <div class="buscador">
+	    <form class="form-buscar" onchange="return addbuscar(this)">
+	    	<select>
+	    	  <option value="0">Elige una casilla</option>
+			  <option value="1">Ronda de Valencia</option>
+			  <option value="3">Plaza Lavapiés</option>
+			  <option value="5">Estación de Goya</option>
+			  <option value="6">Glorieta Cuatro Caminos</option>
+			  <option value="8">Avenida de Reina Victoria</option>
+			  <option value="9">Calle Bravo Murillo</option>
+			  <option value="11">Glorieta de Bilbao</option>
+			  <option value="12">Compañia de la electricidad</option>
+			  <option value="13">Calle Alberto Aguilera</option>
+			  <option value="14">Calle Fuencarral</option>
+			  <option value="15">Estación de las Delicias</option>
+			  <option value="16">AVDA Felipe II</option>
+			  <option value="18">Calle Velázquez</option>
+			  <option value="19">Calle Serrano</option>
+			  <option value="21">Avenida de America</option>
+			  <option value="23">Calle María de molina</option>
+			  <option value="24">Calle de Cea Bermúdez</option>
+			  <option value="25">Estación del mediodia</option>
+			  <option value="26">Avenida de los reyes catolicos</option>
+			  <option value="27">Calle Bailén</option>
+			  <option value="28">Compañia distribucion de aguas</option>
+			  <option value="29">Plaza de España</option>
+			  <option value="31">Puerta de Sol</option>
+			  <option value="32">Calle de Alcalá</option>
+			  <option value="34">Gran via</option>
+			  <option value="35">Estación del norte</option>
+			  <option value="37">Paseo de la Castellana</option>
+			  <option value="39">Paseo del Prado</option>
+			</select> 
+		</form>
+	    <img class="buscar" src=""> 
+    </div>
     <div id="messages"></div>	
 	<form class="chat" onsubmit="return addMessage(this)">
 		<input class="chattext" type="text" id="texto" placeholder="Cuéntanos algo..">

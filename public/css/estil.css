@@ -44,7 +44,7 @@
 
 
 .tablero{
-	width: 800px;
+	width: 41%;
 	position: absolute;
 }
 .piezajug2{
@@ -61,7 +61,7 @@
 }
 .tab-piezas{
 	float: right;
-	margin-right: 795px;
+	margin-right: 42%;
 }
 .mostrar-casilla{
 	margin-top: 500px;

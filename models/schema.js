@@ -23,3 +23,15 @@ var precios_schema = new Schema(precios);
 var Pre = mongoose.model("Precios", precios_schema);
 
 module.exports.precio = Pre;
+
+var suerte = {num:Number, Nombre:String, precio:Number};
+var suerte_schema = new Schema(suerte);
+var S = mongoose.model("Suerte", suerte_schema);
+
+module.exports.s = S;
+
+var caja = {num:Number, Nombre:String, precio:Number};
+var caja_schema = new Schema(caja);
+var S = mongoose.model("Caja", caja_schema);
+
+module.exports.c = S;

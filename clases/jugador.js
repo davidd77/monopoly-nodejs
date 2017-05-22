@@ -10,6 +10,8 @@ class Jugador{
 		this.posy = posy;
 		this.casillas = [];
 		this.ip = null;
+		this.carcel = null;
+		this.enjuego = true;
 	}
 
 	getNom(){
@@ -82,5 +84,12 @@ class Jugador{
 
 	salida(num){
 		this.dinero = this.dinero + num;
+	}
+
+	perder(){
+		this.enjuego == false;
+	}
+	getenpartida(){
+		return this.enjuego;
 	}
 };

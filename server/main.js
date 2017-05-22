@@ -5,6 +5,8 @@ var io = require('socket.io')(server);
 var Msg = require('../models/schema').msg;
 var Cas = require('../models/schema').cas;
 var precios = require('../models/schema').precio;
+var suerte = require('../models/schema').s;
+var caja = require('../models/schema').c;
 var ruta = require('../routes/routes.main');
 var jug = require('../clases/jugador');
 
@@ -27,6 +29,7 @@ mov[2] = [700,700];
 mov[3] = [700,700];
 var turno = 0;
 var arrayips = [];
+var arrayid = [];
 
 //Llamada a la vista
 app.set("view engine", "ejs");
@@ -57,10 +60,12 @@ io.on('connection', function(socket) {
 			}
 		}
 		if(dis==false){
+			arrayid.push(socket.id);
 			arrayips.push(address.address);
 			socket.emit("nombre", jugador[arrayips.length-1].getNom(), colores[arrayips.length-1], jugador[arrayips.length-1].getdinero());
 			console.log("Usuario conectado");
 		}
+		io.to(arrayid[0]).emit("emision");
 	}else{
 		console.log("Limite superado");
 		socket.emit("nombre", "Espectador");
@@ -128,8 +133,8 @@ io.on('connection', function(socket) {
 					mov[turno][1] = mov[turno][1] + data*65;
 					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], jugador[turno].getpieza());
 				}else{
-					//jugador[turno].salida(200);
-					//socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+					jugador[turno].salida(200);
+					socket.emit("alquiler/impuestos", jugador[turno].getdinero());
 					var custommov = 40-jugador[turno].getid();
 					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] + custommov*65;
@@ -137,7 +142,6 @@ io.on('connection', function(socket) {
 					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
 				}
 			}
-			console.log(jugador[turno].getid());
 			url = "";
 			Cas.find({num:jugador[turno].getid()}, function(err, casnumber){ 
 				casnumber.map(function(elem, index){ 
@@ -149,6 +153,20 @@ io.on('connection', function(socket) {
 			sc = false; //sc = suerte y caja
 			for(var x=0; x<suertecaja.length; x++){
 				if(jugador[turno].getid() == suertecaja[x]){
+					var num = Math.floor(Math.random()*15);
+					if(suertecaja[x] == 2 || suertecaja[x] == 17 || suertecaja[x] == 33){
+						caja.find({num:num}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+								socket.emit("suerte", elem.Nombre);
+							});
+						});
+					}else{
+						suerte.find({num:num}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+								socket.emit("suerte", elem.Nombre);
+							});
+						});
+					}
 					sc = true;
 				}
 			}
@@ -208,6 +226,9 @@ io.on('connection', function(socket) {
 			if(turno == 2){
 				turno = 0;
 			}
+			if(jugador[turno].getenpartida()==false || arrayips[turno] == null){
+				turno++;
+			}
 		}
 	});
 
@@ -219,11 +240,14 @@ io.on('connection', function(socket) {
 		});
 	})
 	//Usuario desconectado
-	/*socket.on("disconnect", function(){
-		for(var x=0; x<2; x++){
-			if()
+	socket.on("disconnect", function(){
+		var address = socket.handshake;
+		for(var x=0; x<arrayips.length; x++){
+			if(address.address == arrayips[x]){
+				arrayips[x] == null;
+			}
 		}
-	});*/
+	});
 
 
 	//Compra de casilla
@@ -255,42 +279,3 @@ io.on('connection', function(socket) {
 server.listen(8080, function(){
 	console.log("Servidor corriendo en http://localhost:8080");
 })
-
-
-/*var userSchemaJSON = { nombre:String, direccion:Object }; 
-var user_schema = new Schema(userSchemaJSON); 
-var User = mongoose.model("ficha",user_schema); 
-var objeto = {tel: "561651651", calle: "fghadbskjfh"}; 
-var user1 = new User({nombre:"JOAN",direccion:objeto}); 
-user1.save(function(err){ console.log(err); }); 
-User.find({nombre:"JOAN"},function(err,user){ console.log(user); });*/
-
-/*app.get('/', function(req, res){
-	res.status(200).send("Hello World");
-});*/
-/*var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert');
-*/
-// Connection url
-/*var url = 'mongodb://localhost:27017/sockets';*/
-
-// Use connect method to connect to the server
-/*MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-
-  db.close();
-})*/
-
-/*io.on('connection', function(socket) {
-	console.log('Alguien se ha conectado con Sockets');
-	socket.emit("messages", messages);
-
-	socket.on('new.message', function(data){
-		messages.push(data);
-		//externaljs.prueba();
-		var mensaje = new Msg({autor:data.author, texto:data.text}); 
-		mensaje.save(function(err){ console.log(err); });
-		io.sockets.emit("messages", messages);
-	});
-});*/

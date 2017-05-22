@@ -1,4 +1,4 @@
-var socket = io.connect("192.168.1.149:8080", { 'forceNew': true});
+var socket = io.connect("192.168.12.130:8080", { 'forceNew': true});
 
 nombrejug = "";
 id = null;
@@ -145,4 +145,15 @@ function nocomprarpropiedad(){
 //Alquiler
 socket.on("alquiler/impuestos", function(dinero){
 	document.getElementsByClassName("cantidad")[0].innerHTML = dinero;
+})
+
+
+//Mostrar suerte
+socket.on("suerte", function(data){
+	alert(data);
+});
+
+
+socket.on("emision", function(){
+	alert("daskjhbrihfv");
 })
