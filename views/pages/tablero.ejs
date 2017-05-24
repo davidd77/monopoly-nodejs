@@ -9,29 +9,7 @@
 	<script src="/js/chat/main.js" charset="utf-8"></script>
 	<script src="/librerias/jquery-3.1.1.min.js" charset="utf-8"></script>
 	<script src="/jquery/dice.js"></script>
-	<style>
-		.marcador{
-			border: 1px solid black;
-			width: 500px;
-			height: 50px;
-			position: absolute;
-			margin-left: 520px;
-		}
-		.comprar{
-			position: absolute;
-			width: 133px;
-			height: 50px;
-			margin-top: 440px;
-			margin-left: 700px;
-		}
-		.nocomprar{
-			position: absolute;
-			margin-top: 440px;
-			margin-left: 835px;
-			width: 133px;
-			height: 50px;
-		}
-	</style>
+	<script src="/jquery/functions.js"></script>
 </head>
 <body>
 	<div class="marcador">
@@ -86,6 +64,10 @@
 		</form>
 	    <img class="buscar" src=""> 
     </div>
+    <button class="hipotecar">Hipotecar</button>
+    <button class="deshipotecar">Deshipotecar</button>
+    <button class="construir">Construir</button>
+    <button class="desconstruir">Quitar construccion</button>
     <div id="messages"></div>	
 	<form class="chat" onsubmit="return addMessage(this)">
 		<input class="chattext" type="text" id="texto" placeholder="Cuéntanos algo..">
@@ -93,6 +75,7 @@
 	</form>
 	<button class="comprar" disabled>Comprar</button>
 	<button class="nocomprar" disabled>No Comprar</button>
+	<button class="pagaralquiler">Fin de turno</button>
     <img class="mostrar-casilla" src="/img/casillas/free-parking.jpg">
 </body>
 </html>

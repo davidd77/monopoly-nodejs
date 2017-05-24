@@ -30,6 +30,7 @@ mov[3] = [700,700];
 var turno = 0;
 var arrayips = [];
 var arrayid = [];
+dis = true;
 
 //Llamada a la vista
 app.set("view engine", "ejs");
@@ -50,22 +51,15 @@ app.use("/", ruta);
 
 //Connection
 io.on('connection', function(socket) {
-	if(arrayips.length <4){
+	if(arrayips.length < 2){
 		var address = socket.handshake;
-		var dis = false;
-		for(var x = 0; x<arrayips.length; x++){
-			if(address.address == arrayips[x]){
-				dis = true;
-				socket.emit("nombre", jugador[x].getNom(), colores[x], jugador[x].getdinero());
-			}
-		}
-		if(dis==false){
+		if(arrayips.length<2){
 			arrayid.push(socket.id);
 			arrayips.push(address.address);
 			socket.emit("nombre", jugador[arrayips.length-1].getNom(), colores[arrayips.length-1], jugador[arrayips.length-1].getdinero());
 			console.log("Usuario conectado");
 		}
-		io.to(arrayid[0]).emit("emision");
+		//io.to(arrayid[0]).emit("emision");
 	}else{
 		console.log("Limite superado");
 		socket.emit("nombre", "Espectador");
@@ -148,7 +142,6 @@ io.on('connection', function(socket) {
 					socket.emit("mostrar-casilla", elem.url);
 				}); 
 			});
-			
 			//Comprobacion suerte/caja
 			sc = false; //sc = suerte y caja
 			for(var x=0; x<suertecaja.length; x++){
@@ -177,7 +170,7 @@ io.on('connection', function(socket) {
 				if(jugador[turno].getid() == casillasesp[x]){
 					cesp = true;
 					if(casillasesp[x] == 30){
-						jugador[turno].carcel();
+						jugador[turno].c();
 						mov[turno][1] = mov[turno][1] + 10*65;
 						mov[turno][0] = mov[turno][0] - 10*65;
 						io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
@@ -198,40 +191,48 @@ io.on('connection', function(socket) {
 			}
 
 			//Si sc == true o cesp==true no se le activaran las opciones de comprar y no comprar
-			if(sc==false && cesp==false){
+			if(sc != true && cesp!=true){
 				var propiedadjug1 = jugador[0].comprobarpropiedad(jugador[turno].getid());
 				var propiedadjug2 = jugador[1].comprobarpropiedad(jugador[turno].getid());
 
-				if(propiedadjug1==true || propiedadjug2==true){
-					if(propiedadjug1==true && jugador[turno].getNom() == jugador[0].getNom()){
-						console.log("Propiedad del mismo jugador");
-					}else if(propiedadjug2 == true && jugador[turno].getNom() == jugador[1].getNom()){
-						console.log("Propiedad del mismo jugador");
-					}else{
-						precios.find({num:jugador[turno].getid()}, function(err, alnumber){
-							alnumber.map(function(elem, index){
-								jugador[turno].alquiler(elem.alquiler);
-								socket.emit("alquiler/impuestos", jugador[turno].getdinero());
-							});
-						});
-					}
-				}else{
+				if(propiedadjug1==false && propiedadjug2==false && propiedadjug3==false && propiedadjug4==false){
 					socket.emit("comprar", jugador[turno].getid());
 					io.sockets.emit("bloquear");
+				}else{
+					precios.find({num:jugador[turno].getid()}, function(err, alnumber){
+							alnumber.map(function(elem,index){
+								if(propiedadjug1 == true){
+									if(address.address != arrayips[0]){
+										if(turno == 0){
+											jugador[1].alquiler(elem.alquiler);
+											socket.emit("alquiler/impuestos", jugador[1].getdinero());
+										}else{
+											jugador[turno-1].alquiler(elem.alquiler);
+											socket.emit("alquiler/impuestos", jugador[turno-1].getdinero());
+										}
+									}
+								}else if(propiedadjug2 == true){
+									if(turno == 0){
+											jugador[1].alquiler(elem.alquiler);
+											socket.emit("alquiler/impuestos", jugador[1].getdinero());
+										}else{
+											jugador[turno-1].alquiler(elem.alquiler);
+											socket.emit("alquiler/impuestos", jugador[turno-1].getdinero());
+										}
+								}
+							});
+						});
 				}
-			}
-
-			//Cambia de turno
-			turno++;
-			if(turno == 2){
-				turno = 0;
-			}
-			if(jugador[turno].getenpartida()==false || arrayips[turno] == null){
-				turno++;
-			}
+			}	
 		}
 	});
 
+	socket.on("cambioturno", function(){
+		turno++;
+			if(turno == 2){
+				turno = 0;
+			}
+	});
 	socket.on("buscar.casilla", function(id){
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
@@ -242,16 +243,21 @@ io.on('connection', function(socket) {
 	//Usuario desconectado
 	socket.on("disconnect", function(){
 		var address = socket.handshake;
-		for(var x=0; x<arrayips.length; x++){
-			if(address.address == arrayips[x]){
-				arrayips[x] == null;
+		var dis = arrayips.indexOf(address.address);
+		if(arrayips[dis] == address.address){
+			if(dis==0){
+				io.sockets.emit("dis", jugador[1].getNom());
+			}else{
+				io.sockets.emit("dis", jugador[0].getNom());
 			}
+			arrayips = [];
 		}
 	});
 
 
 	//Compra de casilla
 	socket.on("compra", function(id){
+
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
 				if(turno == 0){
@@ -273,6 +279,32 @@ io.on('connection', function(socket) {
 	socket.on("nocomprar", function(){
 		io.sockets.emit("desbloquear");
 	})
+
+	//Hipoteca
+	socket.on("hipotecar", function(id){
+		var address = socket.handshake;
+		if(arrayips[turno] == address.address){
+			var propiedad = jugador[turno].comprobarpropiedad(id);
+			if(propiedad == true){
+				var hipotec = jugador[turno].hipotecar(id);
+				if(hipotec==true){
+					precios.find({num:jugador[turno].getid()}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+							jugador[turno].cobrarhipoteca(elem.hipoteca);
+							socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+						});
+					});
+					socket.emit("respuesta", 1);
+				}else{
+					socket.emit("respuesta", 3);
+				}
+			}else{
+				socket.emit("respuesta", 2);
+			}
+		}else{
+			socket.emit("respuesta", 0);
+		}
+	});
 });
 
 

@@ -92,17 +92,4 @@ $(function(){
 		}, 3000);
 		mover(num, num2);
 	});
-
-	var chat = $("#mess");
-	chat.click(function(){
-		$("#messages").animate({ scrollTop: $('#messages')[0].scrollHeight}, 0);
-	});
-
-
-	$(".comprar").click(function(){
-		comprarpropiedad();
-	});
-	$(".nocomprar").click(function(){
-		nocomprarpropiedad();
-	});
 });

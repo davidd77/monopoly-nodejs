@@ -12,6 +12,7 @@ class Jugador{
 		this.ip = null;
 		this.carcel = null;
 		this.enjuego = true;
+		this.estadocasilla = [];
 	}
 
 	getNom(){
@@ -32,7 +33,7 @@ class Jugador{
 		return this.id;
 	}
 
-	carcel(){
+	c(){
 		this.id = 10;
 	}
 
@@ -47,6 +48,7 @@ class Jugador{
 	comprar(num, id){
 		this.dinero = this.dinero - num;
 		this.casillas.push(id);
+		this.estadocasilla.push(1);
 	}
 
 	getpropiedades(){
@@ -57,6 +59,33 @@ class Jugador{
 		for(var x=0; x<this.casillas.length; x++){
 			if(this.casillas[x] == id){
 				return true;
+			}
+		}
+		return false;
+	}
+
+	hipotecar(id){
+		for(var x=0; x<this.casillas.length; x++){
+			if(this.casillas[x] == id && this.estadocasilla[x]==1){
+				this.estadocasilla[x]=2;
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return false;
+	}
+	cobrarhipoteca(num){
+		this.dinero = this.dinero+num;
+	}
+	gethipoteca(id){
+		for(var x=0; x<this.casillas.length; x++){
+			if(this.casillas[x] == id){
+				if(this.estadocasilla == 1){
+					return true;
+				}else{
+					return false;
+				}
 			}
 		}
 		return false;
