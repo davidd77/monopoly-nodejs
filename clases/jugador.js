@@ -13,6 +13,7 @@ class Jugador{
 		this.carcel = null;
 		this.enjuego = true;
 		this.estadocasilla = [];
+		this.cont = 0;
 	}
 
 	getNom(){
@@ -47,8 +48,9 @@ class Jugador{
 
 	comprar(num, id){
 		this.dinero = this.dinero - num;
-		this.casillas.push(id);
-		this.estadocasilla.push(1);
+		this.casillas[this.cont] = id;
+		this.estadocasilla[this.cont] = 1;
+		this.cont++;
 	}
 
 	getpropiedades(){
@@ -64,6 +66,25 @@ class Jugador{
 		return false;
 	}
 
+	idestado(){
+		return this.estadocasilla;
+	}
+
+	comprobarpropiedadhipotecada(id){
+		for(var x=0; x<this.casillas.length; x++){
+			if(this.casillas[x] == id){
+				var num = x;
+			}
+		}
+		if(this.estadocasilla[num] == 1){
+			return 2;
+		}else if(this.estadocasilla[num] == 2){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+
 	hipotecar(id){
 		for(var x=0; x<this.casillas.length; x++){
 			if(this.casillas[x] == id && this.estadocasilla[x]==1){
@@ -75,13 +96,27 @@ class Jugador{
 		}
 		return false;
 	}
+	deshipotecar(id){
+		for(var x=0; x<this.casillas.length; x++){
+			if(this.casillas[x] == id && this.estadocasilla[x]==2){
+				this.estadocasilla[x]=1;
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return false;
+	}
 	cobrarhipoteca(num){
 		this.dinero = this.dinero+num;
+	}
+	cobrardeshipoteca(num){
+		this.dinero = this.dinero-num;
 	}
 	gethipoteca(id){
 		for(var x=0; x<this.casillas.length; x++){
 			if(this.casillas[x] == id){
-				if(this.estadocasilla == 1){
+				if(this.estadocasilla[x] == 1){
 					return true;
 				}else{
 					return false;
@@ -120,5 +155,8 @@ class Jugador{
 	}
 	getenpartida(){
 		return this.enjuego;
+	}
+	cobraralquiler(num){
+		this.dinero = this.dinero + num;
 	}
 };

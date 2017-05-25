@@ -15,7 +15,7 @@ $(function(){
 		hipotecar();
 	});
 	$(".deshipotecar").click(function(){
-	alert(document.getElementsByTagName("select")[0].value);
+		deshipotecar();
 	});
 	$(".construir").click(function(){
 	alert(document.getElementsByTagName("select")[0].value);

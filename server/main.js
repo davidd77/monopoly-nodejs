@@ -71,6 +71,7 @@ io.on('connection', function(socket) {
 	//Chat
 	console.log('Alguien se ha conectado con Sockets');
 	console.log(arrayips);
+	console.log(arrayid);
 	socket.on('new.message', function(data){
 			messages.push(data);
 			var mensaje = new Msg({autor:data.author, texto:data.text}); 
@@ -192,41 +193,48 @@ io.on('connection', function(socket) {
 
 			//Si sc == true o cesp==true no se le activaran las opciones de comprar y no comprar
 			if(sc != true && cesp!=true){
-				var propiedadjug1 = jugador[0].comprobarpropiedad(jugador[turno].getid());
-				var propiedadjug2 = jugador[1].comprobarpropiedad(jugador[turno].getid());
-
-				if(propiedadjug1==false && propiedadjug2==false && propiedadjug3==false && propiedadjug4==false){
+				var propiedadjug1 = jugador[0].comprobarpropiedadhipotecada(jugador[turno].getid());
+				var propiedadjug2 = jugador[1].comprobarpropiedadhipotecada(jugador[turno].getid());
+				console.log(propiedadjug1);
+				console.log(propiedadjug2);
+				if(propiedadjug1==0 && propiedadjug2==0){
 					socket.emit("comprar", jugador[turno].getid());
 					io.sockets.emit("bloquear");
 				}else{
 					precios.find({num:jugador[turno].getid()}, function(err, alnumber){
 							alnumber.map(function(elem,index){
-								if(propiedadjug1 == true){
-									if(address.address != arrayips[0]){
+								if(propiedadjug1 == 2){
 										if(turno == 0){
 											jugador[1].alquiler(elem.alquiler);
+											jugador[0].cobraralquiler(elem.alquiler);
 											socket.emit("alquiler/impuestos", jugador[1].getdinero());
-										}else{
-											jugador[turno-1].alquiler(elem.alquiler);
-											socket.emit("alquiler/impuestos", jugador[turno-1].getdinero());
+											io.to(arrayid[0]).emit("emision", jugador[0].getdinero());
 										}
-									}
-								}else if(propiedadjug2 == true){
-									if(turno == 0){
-											jugador[1].alquiler(elem.alquiler);
-											socket.emit("alquiler/impuestos", jugador[1].getdinero());
-										}else{
+								}else if(propiedadjug2 == 2){
+									if(turno == 1){
 											jugador[turno-1].alquiler(elem.alquiler);
+											jugador[1].cobraralquiler(elem.alquiler);
 											socket.emit("alquiler/impuestos", jugador[turno-1].getdinero());
+											io.to(arrayid[1]).emit("emision", jugador[1].getdinero());
 										}
 								}
 							});
 						});
 				}
+			}
+			turno++;
+			if(turno == 2){
+				turno = 0;
 			}	
 		}
 	});
 
+	/*
+	jugador[0].alquiler(elem.alquiler);
+											jugador[1].cobraralquiler(elem.alquiler);
+											socket.emit("alquiler/impuestos", jugador[0].getdinero());
+											io.to(arrayid[1]).emit("emision", jugador[1].getdinero());
+	*/
 	socket.on("cambioturno", function(){
 		turno++;
 			if(turno == 2){
@@ -251,6 +259,11 @@ io.on('connection', function(socket) {
 				io.sockets.emit("dis", jugador[0].getNom());
 			}
 			arrayips = [];
+			arrayid = [];
+			jugador[0] = new jug("Jugador1", 0, ".piezajug1", 1500);
+			jugador[1] = new jug("Jugador2", 0, ".piezajug2", 1500);
+			mov[0] = [700,700];
+			mov[1] = [700,700];
 		}
 	});
 
@@ -260,6 +273,7 @@ io.on('connection', function(socket) {
 
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
+
 				if(turno == 0){
 					jugador[1].comprar(elem.precio, elem.num);
 					socket.emit("compra.definitiva", jugador[1].getdinero());
@@ -305,6 +319,33 @@ io.on('connection', function(socket) {
 			socket.emit("respuesta", 0);
 		}
 	});
+
+	socket.on("deshipotecar", function(id){
+		var address = socket.handshake;
+		if(arrayips[turno] == address.address){
+			var propiedad = jugador[turno].comprobarpropiedad(id);
+			if(propiedad == true){
+				var hipotec = jugador[turno].deshipotecar(id);
+				if(hipotec==true){
+					precios.find({num:jugador[turno].getid()}, function(err, alnumber){
+							alnumber.map(function(elem, index){
+							jugador[turno].impuestos(elem.hipoteca);
+							socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+						});
+					});
+					socket.emit("respuesta", 1);
+				}else{
+					socket.emit("respuesta", 3);
+				}
+			}else{
+				socket.emit("respuesta", 2);
+			}
+		}else{
+			socket.emit("respuesta", 0);
+		}
+	});
+
+
 });
 
 

@@ -65,7 +65,7 @@ function addMessage(e) {
 //Movimiento fichas
 function mover(num, num2){
 	numsum = num+num2;
-	socket.emit("mov.fichas", 1, nombrejug);
+	socket.emit("mov.fichas", 5, nombrejug);
 }
 socket.on('mov.fichas.lateral', function(num, posoriginal, nomjug){
 	$( nomjug ).animate({
@@ -154,8 +154,8 @@ socket.on("suerte", function(data){
 });
 
 
-socket.on("emision", function(){
-	alert("daskjhbrihfv");
+socket.on("emision", function(dinero){
+	document.getElementsByClassName("cantidad")[0].innerHTML = dinero;
 })
 
 
@@ -183,10 +183,20 @@ socket.on("respuesta", function(respuesta){
 		alert("Se ha hipotecado la casilla selecionada");
 	}else if(respuesta == 2){
 		alert("La casilla selecionada no es tu propiedad no se puede hipotecar");
-	}else{
+	}else if(respuesta == 3){
 		alert("La casilla selecionada ya esta hipotecada o construida y no se puede hipotecar");
+	}else if(respuesta==4){
+		alert("Se ha deshipotecado");
+	}else{
+		alert("No esta hipotecada");
 	}
 });
+
+//Deshipoteca
+function deshipotecar(){
+	socket.emit("deshipotecar", document.getElementsByTagName("select")[0].value);
+}
+
 
 
 socket.on("dis", function(nom){
