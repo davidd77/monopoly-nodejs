@@ -19,7 +19,7 @@ jugador[3] = new jug("Jugador4", 0, ".piezajug4", 1500);
 
 //Variables
 colores = ["red", "blue", "green", "yelow"];
-suertecaja = [2,7,17,22,33,35];
+suertecaja = [2,7,17,22,33,36];
 casillasesp = [0,4,10,20,30,38];
 impuestos = 0;
 mov = new Array(4);
@@ -154,6 +154,88 @@ io.on('connection', function(socket) {
 								socket.emit("suerte", elem.Nombre);
 							});
 						});
+						if(num==0){
+									if(turno==0){
+										jugador[1].banca(200);
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+								
+									}else{
+										jugador[0].banca(200);
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+									}
+								}else if(num==1){
+									if(turno==0){
+										jugador[1].impuestos(200);
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+								
+									}else{
+										jugador[0].impuestos(200);
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+									}
+								}else if(num==2){
+									if(turno==0){
+										jugador[1].setid(15);
+										mov[1][0] = 50;
+										mov[1][1] = 375;
+										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+									}else{
+										jugador[0].setid(15);
+										mov[0][0] = 50;
+										mov[0][1] = 375;
+										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+									}
+								}else if(num==3){
+									if(turno==0){
+										jugador[1].setid(10);
+										jugador[1].impuestos(50);
+										mov[1][0] = 50;
+										mov[1][1] = 700;
+										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+									}else{
+										jugador[0].setid(10);
+										jugador[0].impuestos(50);
+										mov[0][0] = 50;
+										mov[0][1] = 700;
+										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());
+									}
+								}else if(num==4){
+									if(turno==0){
+										jugador[1].impuestos(jugador[1].getcasa()*100);
+										jugador[1].impuestos(jugador[1].gethotel()*500);
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+									}else{
+										jugador[0].impuestos(jugador[0].getcasa()*100);
+										jugador[0].impuestos(jugador[0].gethotel()*500);
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());
+									}
+								}else if(num==5){
+									if(turno==0){
+										jugador[1].impuestos(1000);
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+									}else{
+										jugador[0].impuestos(1000);
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+									}
+								}
+								else if(num==6){
+									if(turno==0){
+										jugador[1].setid(38);
+										jugador[1].impuestos(500);
+										mov[1][0] = 700;
+										mov[1][1] = 570;
+										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+										socket.emit("alquiler/impuestos", jugador[1].getdinero());
+									}else{
+										jugador[0].setid(38);
+										jugador[0].impuestos(500);
+										mov[0][0] = 700;
+										mov[0][1] = 570;
+										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+										socket.emit("alquiler/impuestos", jugador[0].getdinero());
+									}			
+								}
 					}else{
 						suerte.find({num:num}, function(err, alnumber){
 							alnumber.map(function(elem, index){
@@ -165,7 +247,7 @@ io.on('connection', function(socket) {
 				}
 			}
 
-			//Comprobacion de salida, carcel, parking y impuestos
+			//Comprobacion de carcel, parking y impuestos
 			cesp = false
 			for(var x=0; x<casillasesp.length; x++){
 				if(jugador[turno].getid() == casillasesp[x]){
@@ -176,12 +258,16 @@ io.on('connection', function(socket) {
 						mov[turno][0] = mov[turno][0] - 10*65;
 						io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
 					}else if(casillasesp[x] == 4 || casillasesp[x] == 38){
-						jugador[turno].impuestos();
 						Cas.find({num:jugador[turno].getid()}, function(err, alnumber){
 							alnumber.map(function(elem, index){
-								jugador[turno].alquiler(elem.precio);
+								if(turno==0){
+									jugador[1].impuestos(elem.precio);
+									socket.emit("alquiler/impuestos", jugador[1].getdinero());
+								}else{
+									jugador[0].impuestos(elem.precio);
+									socket.emit("alquiler/impuestos", jugador[0].getdinero());
+								}
 								impuestos = impuestos + elem.precio;
-								socket.emit("alquiler/impuestos", jugador[turno].getdinero());
 							});
 						});
 					}else if(casillasesp[x] == 20){
@@ -229,18 +315,15 @@ io.on('connection', function(socket) {
 		}
 	});
 
-	/*
-	jugador[0].alquiler(elem.alquiler);
-											jugador[1].cobraralquiler(elem.alquiler);
-											socket.emit("alquiler/impuestos", jugador[0].getdinero());
-											io.to(arrayid[1]).emit("emision", jugador[1].getdinero());
-	*/
 	socket.on("cambioturno", function(){
 		turno++;
 			if(turno == 2){
 				turno = 0;
 			}
 	});
+
+
+	//Buscar casilla
 	socket.on("buscar.casilla", function(id){
 		Cas.find({num:id}, function(err, casnumber){ 
 			casnumber.map(function(elem, index){ 
@@ -248,6 +331,8 @@ io.on('connection', function(socket) {
 			}); 
 		});
 	})
+
+
 	//Usuario desconectado
 	socket.on("disconnect", function(){
 		var address = socket.handshake;
@@ -264,6 +349,7 @@ io.on('connection', function(socket) {
 			jugador[1] = new jug("Jugador2", 0, ".piezajug2", 1500);
 			mov[0] = [700,700];
 			mov[1] = [700,700];
+			turno = 0;
 		}
 	});
 
@@ -278,10 +364,12 @@ io.on('connection', function(socket) {
 					jugador[1].comprar(elem.precio, elem.num);
 					socket.emit("compra.definitiva", jugador[1].getdinero());
 					io.sockets.emit("desbloquear");
+					io.sockets.emit("colorjugador", "blue", jugador[1].getid());
 				}else{
 					jugador[turno-1].comprar(elem.precio, elem.num);
 					socket.emit("compra.definitiva", jugador[turno-1].getdinero());
 					io.sockets.emit("desbloquear");
+					io.sockets.emit("colorjugador", "red", jugador[0].getid());
 				}
 			}); 
 		});
@@ -320,6 +408,7 @@ io.on('connection', function(socket) {
 		}
 	});
 
+	//deshipoteca
 	socket.on("deshipotecar", function(id){
 		var address = socket.handshake;
 		if(arrayips[turno] == address.address){
@@ -333,12 +422,12 @@ io.on('connection', function(socket) {
 							socket.emit("alquiler/impuestos", jugador[turno].getdinero());
 						});
 					});
-					socket.emit("respuesta", 1);
+					socket.emit("respuesta", 4);
 				}else{
-					socket.emit("respuesta", 3);
+					socket.emit("respuesta", 5);
 				}
 			}else{
-				socket.emit("respuesta", 2);
+				socket.emit("respuesta", 6);
 			}
 		}else{
 			socket.emit("respuesta", 0);
