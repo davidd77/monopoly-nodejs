@@ -42,9 +42,8 @@
 }
 
 
-
 .tablero{
-	width: 41%;
+	width: 800px;
 	position: absolute;
 }
 .piezajug2{
@@ -59,14 +58,9 @@
 .piezajug1{
 	width: 55px;
 }
-.tab-piezas{
-	float: right;
-	margin-right: 42%;
-}
 .mostrar-casilla{
-	margin-top: 500px;
+	margin-top: 130px;
 	position: absolute;
-	margin-left: 150px;
 }
 .wrap{
 	position: absolute;
@@ -101,28 +95,50 @@
 }
 .marcador{
 	border: 1px solid black;
-	width: 500px;
+	width: 300px;
 	height: 50px;
-	position: absolute;
-	margin-left: 520px;
 }
 .comprar{
 	position: absolute;
 	width: 133px;
 	height: 50px;
-	margin-top: 440px;
-	margin-left: 150px;
+	margin-top: 70px;
 }
 .nocomprar{
 	position: absolute;
-	margin-top: 440px;
-	margin-left: 283px;
+	margin-top: 70px;
+	margin-left: 133px;
 	width: 133px;
 	height: 50px;
 }
-.pagaralquiler{
+.finturno{
 	position: absolute;
-margin-top: 440px;
+margin-top: 70px;
 height: 50px;
-margin-left: 415px;
+margin-left: 275px;
+}
+
+#propiedades{
+position: absolute;
+float: right;
+width: 800px;
+height: 800px;
+font-size: 70px;
+}
+
+.panel{
+	margin-left: 815px;
+width: 100%;
+height: 100%;
+}
+
+
+.cantidad, .marcador1{
+	text-align: center;
+}
+
+@media (max-width: 800px){
+	.marcador{
+		width: 20% !important;
+	}
 }

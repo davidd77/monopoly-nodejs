@@ -3,17 +3,18 @@ module.exports =
 class Jugador{
 	constructor(nomjug, id, pieza, dinero, posx, posy){
 		this.nombre = nomjug;
-		this.id = id;
+		this.id = 0;
 		this.pieza = pieza;
 		this.dinero = dinero;
 		this.posx = posx;
 		this.posy = posy;
 		this.casillas = [];
-		this.ip = null;
 		this.carcel = null;
 		this.enjuego = true;
 		this.estadocasilla = [];
 		this.cont = 0;
+		this.casa = 0;
+		this.hotel = 0;
 	}
 
 	getNom(){
@@ -149,7 +150,9 @@ class Jugador{
 	salida(num){
 		this.dinero = this.dinero + num;
 	}
-
+	banca(num){
+		this.dinero = this.dinero +num;
+	}
 	perder(){
 		this.enjuego == false;
 	}
@@ -158,5 +161,13 @@ class Jugador{
 	}
 	cobraralquiler(num){
 		this.dinero = this.dinero + num;
+	}
+
+	getcasa(){
+		return this.casa;
+	}
+
+	gethotel(){
+		return this.hotel;
 	}
 };

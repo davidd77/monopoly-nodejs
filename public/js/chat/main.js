@@ -1,4 +1,4 @@
-var socket = io.connect("192.168.12.130:8080", { 'forceNew': true});
+var socket = io.connect("192.168.1.105:8080", { 'forceNew': true});
 
 nombrejug = "";
 id = null;
@@ -65,7 +65,7 @@ function addMessage(e) {
 //Movimiento fichas
 function mover(num, num2){
 	numsum = num+num2;
-	socket.emit("mov.fichas", 5, nombrejug);
+	socket.emit("mov.fichas", 7, nombrejug);
 }
 socket.on('mov.fichas.lateral', function(num, posoriginal, nomjug){
 	$( nomjug ).animate({
@@ -93,6 +93,12 @@ socket.on('mov.fichas.custom1', function(num, posoriginal, posoriginal1, nomjug)
     	'margin-left': posoriginal1+"px",
   	}, 3000);
 });
+socket.on("mov.fichas.fijo", function(posoriginal, posoriginal1, nomjug){
+	$( nomjug ).animate({
+    	'margin-left': posoriginal+"px",
+    	'margin-top': posoriginal1+"px",
+  	}, 3000);
+})
 //Fin movimiento fichas
 
 
@@ -166,7 +172,9 @@ socket.on("alquiler", function(){
 	$(".pagaralquiler").prop("disabled", false);
 });
 
-function pagaralquiler(){
+
+//Cambio de turno
+function finturno(){
 	socket.emit("cambioturno");
 }
 
@@ -187,8 +195,10 @@ socket.on("respuesta", function(respuesta){
 		alert("La casilla selecionada ya esta hipotecada o construida y no se puede hipotecar");
 	}else if(respuesta==4){
 		alert("Se ha deshipotecado");
-	}else{
+	}else if(respuesta==5){
 		alert("No esta hipotecada");
+	}else{
+		alert("La casilla selecionada no es tu propiedad no se puede deshipotecar");
 	}
 });
 
@@ -197,9 +207,13 @@ function deshipotecar(){
 	socket.emit("deshipotecar", document.getElementsByTagName("select")[0].value);
 }
 
-
-
+//Desconexion
 socket.on("dis", function(nom){
 	alert("Ha ganado "+nom+" por desconexion");
-	window.location.replace("http://192.168.12.130:8080");
-})
+	window.location.replace("http://192.168.1.105:8080");
+});
+
+//Identidicador
+socket.on("colorjugador", function(color, idcasilla){
+	snapcasilla(color, idcasilla);
+});

@@ -23,7 +23,7 @@ $(function(){
 	$(".desconstruir").click(function(){
 	alert(document.getElementsByTagName("select")[0].value);
 	});
-	$(".pagaralquiler").click(function(){
-		pagaralquiler();
+	$(".finturno").click(function(){
+		finturno();
 	});
 });
