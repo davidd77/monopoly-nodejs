@@ -13,15 +13,13 @@
 </head>
 <body>
     <div class="tab-piezas">
-	<img class="tablero" src="/img/tablero-monopolio.jpg">
-	<img class="piezajug1" src="/img/pieza1.png">
-	<img class="piezajug2" src="/img/pieza2.png">
-	<img class="piezajug3" src="/img/pieza3.png">
-	<img class="piezajug4" src="/img/pieza4.png">
+		<img class="tablero" src="/img/tablero-monopolio.jpg">
+		<img class="piezajug1" src="/img/pieza1.png">
+		<img class="piezajug2" src="/img/pieza2.png">
 	</div>
 	<svg id="propiedades"></svg>
-	<div class="panel">
-		<div class="marcador">
+	<div class="panel" style="position: relative; width: 100%;">
+		<div class="marcador" style="width: 900px;">
 			<div class="marcador1"></div>
 			<div class="cantidad"></div>
 		</div>
@@ -65,11 +63,10 @@
 				</select> 
 			</form>
 		    <img class="buscar" src=""> 
+		    <button class="hipotecar">Hipotecar</button>
+	    	<button class="deshipotecar">Deshipotecar</button>
 	    </div>
-	    <button class="hipotecar">Hipotecar</button>
-	    <button class="deshipotecar">Deshipotecar</button>
-	    <button class="construir">Construir</button>
-	    <button class="desconstruir">Quitar construccion</button>
+	    
 	    <div id="messages"></div>	
 		<form class="chat" onsubmit="return addMessage(this)">
 			<input class="chattext" type="text" id="texto" placeholder="Cuéntanos algo..">
@@ -77,7 +74,7 @@
 		</form>
 		<button class="comprar" disabled>Comprar</button>
 		<button class="nocomprar" disabled>No Comprar</button>
-		<button class="finturno">Fin de turno</button>
+		<!--<button class="bancarrota" disabled>Bancarrota</button>-->
 	    <img class="mostrar-casilla" src="/img/casillas/free-parking.jpg">
 	</div>
 </body>

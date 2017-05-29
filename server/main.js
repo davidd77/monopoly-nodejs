@@ -147,99 +147,17 @@ io.on('connection', function(socket) {
 			sc = false; //sc = suerte y caja
 			for(var x=0; x<suertecaja.length; x++){
 				if(jugador[turno].getid() == suertecaja[x]){
-					var num = Math.floor(Math.random()*15);
+					var num = Math.floor(Math.random()*7);
 					if(suertecaja[x] == 2 || suertecaja[x] == 17 || suertecaja[x] == 33){
 						caja.find({num:num}, function(err, alnumber){
 							alnumber.map(function(elem, index){
-								socket.emit("suerte", elem.Nombre);
+								socket.emit("caja", elem.Nombre , num);
 							});
 						});
-						if(num==0){
-									if(turno==0){
-										jugador[1].banca(200);
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-								
-									}else{
-										jugador[0].banca(200);
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
-									}
-								}else if(num==1){
-									if(turno==0){
-										jugador[1].impuestos(200);
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-								
-									}else{
-										jugador[0].impuestos(200);
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
-									}
-								}else if(num==2){
-									if(turno==0){
-										jugador[1].setid(15);
-										mov[1][0] = 50;
-										mov[1][1] = 375;
-										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
-									}else{
-										jugador[0].setid(15);
-										mov[0][0] = 50;
-										mov[0][1] = 375;
-										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
-									}
-								}else if(num==3){
-									if(turno==0){
-										jugador[1].setid(10);
-										jugador[1].impuestos(50);
-										mov[1][0] = 50;
-										mov[1][1] = 700;
-										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-									}else{
-										jugador[0].setid(10);
-										jugador[0].impuestos(50);
-										mov[0][0] = 50;
-										mov[0][1] = 700;
-										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());
-									}
-								}else if(num==4){
-									if(turno==0){
-										jugador[1].impuestos(jugador[1].getcasa()*100);
-										jugador[1].impuestos(jugador[1].gethotel()*500);
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-									}else{
-										jugador[0].impuestos(jugador[0].getcasa()*100);
-										jugador[0].impuestos(jugador[0].gethotel()*500);
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());
-									}
-								}else if(num==5){
-									if(turno==0){
-										jugador[1].impuestos(1000);
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-									}else{
-										jugador[0].impuestos(1000);
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());				
-									}
-								}
-								else if(num==6){
-									if(turno==0){
-										jugador[1].setid(38);
-										jugador[1].impuestos(500);
-										mov[1][0] = 700;
-										mov[1][1] = 570;
-										io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
-										socket.emit("alquiler/impuestos", jugador[1].getdinero());
-									}else{
-										jugador[0].setid(38);
-										jugador[0].impuestos(500);
-										mov[0][0] = 700;
-										mov[0][1] = 570;
-										io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
-										socket.emit("alquiler/impuestos", jugador[0].getdinero());
-									}			
-								}
 					}else{
 						suerte.find({num:num}, function(err, alnumber){
 							alnumber.map(function(elem, index){
-								socket.emit("suerte", elem.Nombre);
+								socket.emit("suerte", elem.Nombre, num);
 							});
 						});
 					}
@@ -315,14 +233,6 @@ io.on('connection', function(socket) {
 		}
 	});
 
-	socket.on("cambioturno", function(){
-		turno++;
-			if(turno == 2){
-				turno = 0;
-			}
-	});
-
-
 	//Buscar casilla
 	socket.on("buscar.casilla", function(id){
 		Cas.find({num:id}, function(err, casnumber){ 
@@ -380,7 +290,192 @@ io.on('connection', function(socket) {
 	//No comprar casilla
 	socket.on("nocomprar", function(){
 		io.sockets.emit("desbloquear");
-	})
+	});
+
+	//Activar accion de suerte
+	socket.on("suerte-emision", function(num){
+		if(num==0){
+			if(turno==0){
+				jugador[1].banca(200);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].banca(200);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}else if(num==1){
+			if(turno==0){
+				jugador[1].impuestos(200);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());				
+			}else{
+				jugador[0].impuestos(200);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}else if(num==2){
+			if(turno==0){
+				jugador[1].setid(15);
+				mov[1][0] = 50;
+				mov[1][1] = 375;
+				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+			}else{
+				jugador[0].setid(15);
+				mov[0][0] = 50;
+				mov[0][1] = 375;
+				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+			}
+		}else if(num==3){
+			if(turno==0){
+				jugador[1].setid(10);
+				jugador[1].impuestos(50);
+				mov[1][0] = 50;
+				mov[1][1] = 700;
+				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].setid(10);
+				jugador[0].impuestos(50);
+				mov[0][0] = 50;
+				mov[0][1] = 700;
+				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+			}
+		}else if(num==4){
+			if(turno==0){
+				jugador[1].impuestos(jugador[1].getcasa()*100);
+				jugador[1].impuestos(jugador[1].gethotel()*500);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].impuestos(jugador[0].getcasa()*100);
+				jugador[0].impuestos(jugador[0].gethotel()*500);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+			}
+		}else if(num==5){
+			if(turno==0){
+				jugador[1].impuestos(1000);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].impuestos(1000);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}else if(num==6){
+			if(turno==0){
+				jugador[1].setid(38);
+				jugador[1].impuestos(500);
+				mov[1][0] = 700;
+				mov[1][1] = 570;
+				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].setid(38);
+				jugador[0].impuestos(500);
+				mov[0][0] = 700;
+				mov[0][1] = 570;
+				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+			}			
+		}
+		if(jugador[0].getdinero()<0){
+			io.sockets.emit("fin-partida", jugador[1].getNom());
+		}else if(jugador[1].getdinero()<0){	
+			io.socket.emit("fin-partida", jugador[0].getNom());
+		}
+	});
+
+
+	//Activar accion de caja
+	socket.on("caja-emision", function(num){
+		if(num==0){
+			if(turno==0){
+				jugador[1].impuestos(200);
+				jugador[0].banca(200);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+				io.to(arrayid[0]).emit("emision", jugador[0].getdinero());
+			}else{
+				jugador[0].impuestos(200);
+				jugador[1].banca(200);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+				io.to(arrayid[1]).emit("emision", jugador[1].getdinero());			
+			}
+		}else if(num==1){
+			if(turno==0){
+				jugador[1].setid(39);
+				jugador[1].impuestos(400);
+				mov[1][0] = 700;
+				mov[1][1] = 635;
+				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());			
+			}else{
+				jugador[0].setid(39);
+				jugador[0].impuestos(400);
+				mov[0][0] = 700;
+				mov[0][1] = 635;
+				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}else if(num==2){
+			if(turno==0){
+				io.sockets.emit("fin-partida", jugador[0].getNom());
+			}else{
+				io.sockets.emit("fin-partida", jugador[1].getNom());
+			}
+		}else if(num==3){
+			if(turno==0){
+				jugador[1].banca(500);
+				jugador[0].impuestos(500);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+				io.to(arrayid[0]).emit("emision", jugador[0].getdinero());
+			}else{
+				jugador[0].banca(500);
+				jugador[1].impuestos(500);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+				io.to(arrayid[1]).emit("emision", jugador[1].getdinero());
+			}
+		}else if(num==4){
+			if(turno==0){
+				jugador[1].impuestos(300);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].impuestos(300);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());
+			}
+		}else if(num==5){
+			if(turno==0){
+				jugador[1].banca(300);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].impuestos(300);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}else if(num==6){
+			if(turno==0){
+				jugador[1].banca(250);
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());
+			}else{
+				jugador[0].impuestos(250);
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}			
+		}else{
+			if(turno==0){
+				jugador[1].setid(0);
+				jugador[1].banca(400);
+				mov[1][0] = 700;
+				mov[1][1] = 700;
+				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
+				socket.emit("alquiler/impuestos", jugador[1].getdinero());			
+			}else{
+				jugador[0].setid(0);
+				jugador[0].impuestos(400);
+				mov[0][0] = 700;
+				mov[0][1] = 635;
+				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
+				socket.emit("alquiler/impuestos", jugador[0].getdinero());				
+			}
+		}
+		if(jugador[0].getdinero()<0){
+			io.sockets.emit("fin-partida", jugador[1].getNom());
+		}else if(jugador[1].getdinero()<0){	
+			io.sockets.emit("fin-partida", jugador[0].getNom());
+		}
+	});
 
 	//Hipoteca
 	socket.on("hipotecar", function(id){

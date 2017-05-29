@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html style="/*! width: 100%; */"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Os jodeis</title>
+	<link rel="stylesheet" type="text/css" href="Os%20jodeis_files/estil.css">
+	<script src="Os%20jodeis_files/snap.js" charset="utf-8"></script>
+	<script src="Os%20jodeis_files/tablero.js" charset="utf-8"></script>
+	<script src="Os%20jodeis_files/socket.js" charset="utf-8"></script>
+	<script src="Os%20jodeis_files/main.js" charset="utf-8"></script>
+	<script src="Os%20jodeis_files/jquery-3.js" charset="utf-8"></script>
+	<script src="Os%20jodeis_files/dice.js"></script>
+	<script src="Os%20jodeis_files/functions.js"></script>
+</head>
+<body style="/*! width: 100%; */">
+    <div class="tab-piezas">
+	<img class="tablero" src="Os%20jodeis_files/tablero-monopolio.jpg">
+	<img class="piezajug1" src="Os%20jodeis_files/pieza1.png" style="margin-left: 700px; margin-top: 700px;">
+	<img class="piezajug2" src="Os%20jodeis_files/pieza2.png" style="margin-left: 700px; margin-top: 700px;">
+	</div>
+	<svg id="propiedades"><desc>Created with Snap</desc><defs></defs></svg>
+	<div class="panel">
+		<div class="marcador" style="background-color: red;">
+			<div class="marcador1">Jugador1</div>
+			<div class="cantidad">1500</div>
+		</div>
+		<button type="button" id="result">Dados</button>
+		<div style="display:none" class="wrap">
+	   		<div id="dice" class="dice dice_1"></div>
+	   		<div id="dice2" class="dice dice_1"></div>
+	    </div>
+	    <div class="buscador">
+		    <form class="form-buscar" onchange="return addbuscar(this)">
+		    	<select>
+		    	  <option value="0">Elige una casilla</option>
+				  <option value="1">Ronda de Valencia</option>
+				  <option value="3">Plaza Lavapiés</option>
+				  <option value="5">Estación de Goya</option>
+				  <option value="6" selected="selected">Glorieta Cuatro Caminos</option>
+				  <option value="8">Avenida de Reina Victoria</option>
+				  <option value="9">Calle Bravo Murillo</option>
+				  <option value="11">Glorieta de Bilbao</option>
+				  <option value="12">Compañia de la electricidad</option>
+				  <option value="13">Calle Alberto Aguilera</option>
+				  <option value="14">Calle Fuencarral</option>
+				  <option value="15">Estación de las Delicias</option>
+				  <option value="16">AVDA Felipe II</option>
+				  <option value="18">Calle Velázquez</option>
+				  <option value="19">Calle Serrano</option>
+				  <option value="21">Avenida de America</option>
+				  <option value="23">Calle María de molina</option>
+				  <option value="24">Calle de Cea Bermúdez</option>
+				  <option value="25">Estación del mediodia</option>
+				  <option value="26">Avenida de los reyes catolicos</option>
+				  <option value="27">Calle Bailén</option>
+				  <option value="28">Compañia distribucion de aguas</option>
+				  <option value="29">Plaza de España</option>
+				  <option value="31">Puerta de Sol</option>
+				  <option value="32">Calle de Alcalá</option>
+				  <option value="34">Gran via</option>
+				  <option value="35">Estación del norte</option>
+				  <option value="37">Paseo de la Castellana</option>
+				  <option value="39">Paseo del Prado</option>
+				</select> 
+			</form>
+		    <img class="buscar" src="Os%20jodeis_files/glorieta-cuatro-caminos.png"> 
+	    </div>
+	    <button class="hipotecar">Hipotecar</button>
+	    <button class="deshipotecar">Deshipotecar</button>
+	    <div id="messages"><div>
+				  <strong>Jugador1</strong>:
+				  <em>Os jodeis</em>
+				</div> <div>
+				  <strong>Jugador1</strong>:
+				  <em>omar te jodes</em>
+				</div> <div>
+				  <strong>Jugador3</strong>:
+				  <em>pene</em>
+				</div> <div>
+				  <strong>Jugador2</strong>:
+				  <em>pene</em>
+				</div> <div>
+				  <strong>Jugador1</strong>:
+				  <em>Dani hijo puta</em>
+				</div> <div>
+				  <strong>Espectador</strong>:
+				  <em>var express = require('express'); var app = express(); var 
+server = require('http').Server(app); var io = 
+require('socket.io')(server); var routermain = 
+require("../routes/routes.main"); var Msg = 
+require("../model/schema").msg; var Usr = 
+require("../model/schema").user; var Rnk = 
+require("../model/schema").rank; var Prt = 
+require("../model/schema").partida; var ShipsObj = 
+require("../class/ships"); app.set("view engine","ejs"); var messages = 
+[];//Array donde se guardan los mnsg de texto 
+app.use(express.static('public'));</em>
+				</div></div>	
+		<form class="chat" onsubmit="return addMessage(this)">
+			<input class="chattext" id="texto" placeholder="Cuéntanos algo.." type="text">
+			<input class="chattext" id="mess" value="Enviar!" type="submit">
+		</form>
+		<button class="comprar" disabled="disabled">Comprar</button>
+		<button class="nocomprar" disabled="disabled">No Comprar</button>
+		<!--<button class="bancarrota" disabled>Bancarrota</button>-->
+	    <img class="mostrar-casilla" src="Os%20jodeis_files/free-parking.jpg">
+	</div>
+
+</body><style type="text/css"></style></html>
