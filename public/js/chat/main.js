@@ -1,4 +1,4 @@
-var socket = io.connect("192.168.12.72:8080", { 'forceNew': true});
+var socket = io.connect("192.168.1.105:8080", { 'forceNew': true});
 
 nombrejug = "";
 id = null;
@@ -61,7 +61,7 @@ function addMessage(e) {
 //Movimiento fichas
 function mover(num, num2){
 	numsum = num+num2;
-	socket.emit("mov.fichas", numsum, nombrejug);
+	socket.emit("mov.fichas", 4, nombrejug);
 }
 socket.on('mov.fichas.lateral', function(num, posoriginal, nomjug){
 	$( nomjug ).animate({
@@ -95,6 +95,54 @@ socket.on("mov.fichas.fijo", function(posoriginal, posoriginal1, nomjug){
     	'margin-top': posoriginal1+"px",
   	}, 3000);
 })
+
+socket.on("mov-fijo-lateral1", function(num, posoriginal, posoriginal1, nomjug){
+	$(nomjug).animate({
+		'margin-left': posoriginal-65+"px"
+	}, 1000);
+	$(nomjug).animate({
+		'margin-top': posoriginal1+"px"
+	}, 3000);
+	$(nomjug).animate({
+		'margin-left': posoriginal+"px"
+	}, 1000);
+});
+
+socket.on("mov-fijo-lateral2", function(num, posoriginal, posoriginal1, nomjug){
+	$(nomjug).animate({
+		'margin-top': posoriginal1-65+"px"
+	}, 1000);
+	$(nomjug).animate({
+		'margin-left': posoriginal+"px"
+	}, 3000);
+	$(nomjug).animate({
+		'margin-top': posoriginal1+"px"
+	}, 1000);
+});
+
+socket.on("mov-fijo-lateral3", function(num, posoriginal, posoriginal1, nomjug){
+	$(nomjug).animate({
+		'margin-left': posoriginal+65+"px"
+	}, 1000);
+	$(nomjug).animate({
+		'margin-top': posoriginal1+"px"
+	}, 3000);
+	$(nomjug).animate({
+		'margin-left': posoriginal+"px"
+	}, 1000);
+});
+
+socket.on("mov-fijo-lateral4", function(num, posoriginal, posoriginal1, nomjug){
+	$(nomjug).animate({
+		'margin-top': posoriginal1+65+"px"
+	}, 1000);
+	$(nomjug).animate({
+		'margin-left': posoriginal+"px"
+	}, 3000);
+	$(nomjug).animate({
+		'margin-top': posoriginal1+"px"
+	}, 1000);
+});
 //Fin movimiento fichas
 
 
@@ -207,7 +255,7 @@ function deshipotecar(){
 //Desconexion
 socket.on("dis", function(nom){
 	alert("Ha ganado "+nom+" por desconexion");
-	window.location.replace("http://192.168.12.72:8080");
+	window.location.replace("http://192.168.1.105:8080");
 });
 
 //Identidicador
@@ -215,9 +263,15 @@ socket.on("colorjugador", function(color, idcasilla){
 	snapcasilla(color, idcasilla);
 });
 
+//Error compra
+socket.on("Error", function(){
+	alert("No tienes suficientes fondos");
+});
+
+
 
 //Fin de la partida
 socket.on("fin-partida", function(nom){
 	alert("Ha ganado "+ nom);
-	window.location.replace("http://192.168.12.72:8080");
+	window.location.replace("http://192.168.1.105:8080");
 });

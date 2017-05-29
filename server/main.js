@@ -11,22 +11,18 @@ var ruta = require('../routes/routes.main');
 var jug = require('../clases/jugador');
 
 //Objetos
-jugador = new Array(4);
+jugador = new Array(2);
 jugador[0] = new jug("Jugador1", 0, ".piezajug1", 1500);
 jugador[1] = new jug("Jugador2", 0, ".piezajug2", 1500);
-jugador[2] = new jug("Jugador3", 0, ".piezajug3", 1500);
-jugador[3] = new jug("Jugador4", 0, ".piezajug4", 1500);
 
 //Variables
 colores = ["red", "blue", "green", "yelow"];
 suertecaja = [2,7,17,22,33,36];
 casillasesp = [0,4,10,20,30,38];
 impuestos = 0;
-mov = new Array(4);
+mov = new Array(2);
 mov[0] = [700,700];
 mov[1] = [700,700];
-mov[2] = [700,700];
-mov[3] = [700,700];
 var turno = 0;
 var arrayips = [];
 var arrayid = [];
@@ -62,7 +58,7 @@ io.on('connection', function(socket) {
 		//io.to(arrayid[0]).emit("emision");
 	}else{
 		console.log("Limite superado");
-		socket.emit("nombre", "Espectador");
+		socket.emit("nombre", "Espectador", "white", 0);
 	}
 
 	socket.emit("posiciones", mov);
@@ -87,7 +83,11 @@ io.on('connection', function(socket) {
 
 			//Movimiento
 			if(jugador[turno].getid()<10){
-				if(data+jugador[turno].getid()<=10){
+				if(jugador[turno].getid()==9 && data == 12){
+					jugador[turno].setid(data);
+					mov[turno][1] = mov[turno][1] - 65*10;
+					io.sockets.emit("mov-fijo-lateral", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza());
+				}else if(data+jugador[turno].getid()<=10){
 					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] - data*65;
 					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], jugador[turno].getpieza());
@@ -99,7 +99,11 @@ io.on('connection', function(socket) {
 					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza());
 				}
 			}else if(jugador[turno].getid()>=10 && jugador[turno].getid()<20){
-				if(data+jugador[turno].getid()<=20){
+				if(jugador[turno].getid()==19 && data == 12){
+					jugador[turno].setid(data);
+					mov[turno][0] = mov[turno][0] + 65*10;
+					io.sockets.emit("mov-fijo-lateral2", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza())
+				}else if(data+jugador[turno].getid()<=20){
 					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] - data*65;
 					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], jugador[turno].getpieza());
@@ -111,7 +115,13 @@ io.on('connection', function(socket) {
 					io.sockets.emit("mov.fichas.custom1", data, mov[turno][1], mov[turno][0], jugador[turno].getpieza());
 				}
 			}else if(jugador[turno].getid()>=20 && jugador[turno].getid()<30){
-				if(data+jugador[turno].getid()<=30){
+				if(jugador[turno].getid()==29 && data == 12){
+					jugador[turno].salida(200);
+					socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+					jugador[turno].setidfija(1);
+					mov[turno][1] = mov[turno][1] + 65*10;
+					io.sockets.emit("mov-fijo-lateral3", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza())
+				}else if(data+jugador[turno].getid()<=30){
 					jugador[turno].setid(data);
 					mov[turno][0] = mov[turno][0] + data*65;
 					io.sockets.emit("mov.fichas.lateral", data, mov[turno][0], jugador[turno].getpieza());
@@ -123,7 +133,13 @@ io.on('connection', function(socket) {
 					io.sockets.emit("mov.fichas.custom", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza());
 				}
 			}else{
-				if(data+jugador[turno].getid()<=39){
+				if(jugador[turno].getid()==39 && data == 12){
+					jugador[turno].salida(200);
+					socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+					jugador[turno].setidfija(11);
+					mov[turno][0] = mov[turno][0] + 65*10;
+					io.sockets.emit("mov-fijo-lateral4", data, mov[turno][0], mov[turno][1], jugador[turno].getpieza())
+				}else if(data+jugador[turno].getid()<=39){
 					jugador[turno].setid(data);
 					mov[turno][1] = mov[turno][1] + data*65;
 					io.sockets.emit("mov.fichas.vertical", data, mov[turno][1], jugador[turno].getpieza());
@@ -181,9 +197,15 @@ io.on('connection', function(socket) {
 								if(turno==0){
 									jugador[1].impuestos(elem.precio);
 									socket.emit("alquiler/impuestos", jugador[1].getdinero());
+									if(jugador[1].getdinero()<0){
+										io.sockets.emit("fin-partida", jugador[0].getNom());
+									}
 								}else{
 									jugador[0].impuestos(elem.precio);
 									socket.emit("alquiler/impuestos", jugador[0].getdinero());
+									if(jugador[0].getdinero()<0){
+										io.sockets.emit("fin-partida", jugador[1].getNom());
+									}
 								}
 								impuestos = impuestos + elem.precio;
 							});
@@ -213,6 +235,9 @@ io.on('connection', function(socket) {
 											jugador[0].cobraralquiler(elem.alquiler);
 											socket.emit("alquiler/impuestos", jugador[1].getdinero());
 											io.to(arrayid[0]).emit("emision", jugador[0].getdinero());
+											if(jugador[1].getdinero()<0){
+												io.sockets.emit("fin-partida", jugador[0].getNom());
+											}
 										}
 								}else if(propiedadjug2 == 2){
 									if(turno == 1){
@@ -220,6 +245,9 @@ io.on('connection', function(socket) {
 											jugador[1].cobraralquiler(elem.alquiler);
 											socket.emit("alquiler/impuestos", jugador[turno-1].getdinero());
 											io.to(arrayid[1]).emit("emision", jugador[1].getdinero());
+											if(jugador[0].getdinero()<0){
+												io.sockets.emit("fin-partida", jugador[1].getNom());
+											}
 										}
 								}
 							});
@@ -271,15 +299,23 @@ io.on('connection', function(socket) {
 			casnumber.map(function(elem, index){ 
 
 				if(turno == 0){
-					jugador[1].comprar(elem.precio, elem.num);
-					socket.emit("compra.definitiva", jugador[1].getdinero());
-					io.sockets.emit("desbloquear");
-					io.sockets.emit("colorjugador", "blue", jugador[1].getid());
+					if(jugador[1].getdinero()<elem.precio){
+						socket.emit("Error");
+					}else{
+						jugador[1].comprar(elem.precio, elem.num);
+						socket.emit("compra.definitiva", jugador[1].getdinero());
+						io.sockets.emit("desbloquear");
+						io.sockets.emit("colorjugador", "blue", jugador[1].getid());
+					}
 				}else{
-					jugador[turno-1].comprar(elem.precio, elem.num);
-					socket.emit("compra.definitiva", jugador[turno-1].getdinero());
-					io.sockets.emit("desbloquear");
-					io.sockets.emit("colorjugador", "red", jugador[0].getid());
+					if(jugador[0].getdinero()<elem.precio){
+						socket.emit("Error");
+					}else{
+						jugador[turno-1].comprar(elem.precio, elem.num);
+						socket.emit("compra.definitiva", jugador[turno-1].getdinero());
+						io.sockets.emit("desbloquear");
+						io.sockets.emit("colorjugador", "red", jugador[0].getid());
+					}
 				}
 			}); 
 		});
@@ -513,8 +549,12 @@ io.on('connection', function(socket) {
 				if(hipotec==true){
 					precios.find({num:jugador[turno].getid()}, function(err, alnumber){
 							alnumber.map(function(elem, index){
-							jugador[turno].impuestos(elem.hipoteca);
-							socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+							if(jugador[turno].getdinero()<elem.hipoteca){
+								socket.emit("Error");
+							}else{
+								jugador[turno].impuestos(elem.hipoteca);
+								socket.emit("alquiler/impuestos", jugador[turno].getdinero());
+							}
 						});
 					});
 					socket.emit("respuesta", 4);

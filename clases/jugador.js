@@ -3,7 +3,7 @@ module.exports =
 class Jugador{
 	constructor(nomjug, id, pieza, dinero, posx, posy){
 		this.nombre = nomjug;
-		this.id = 0;
+		this.id = id;
 		this.pieza = pieza;
 		this.dinero = dinero;
 		this.posx = posx;
@@ -21,6 +21,9 @@ class Jugador{
 		return this.nombre;
 	}
 
+	setidfija(num){
+		this.id = num;
+	}
 	setid(num){
 		if(this.id+num>39){
 			var num1 = 39-this.id;
