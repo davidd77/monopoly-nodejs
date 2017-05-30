@@ -348,26 +348,26 @@ io.on('connection', function(socket) {
 			}
 		}else if(num==2){
 			if(turno==0){
-				jugador[1].setid(15);
+				jugador[1].setidfija(15);
 				mov[1][0] = 50;
 				mov[1][1] = 375;
 				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
 			}else{
-				jugador[0].setid(15);
+				jugador[0].setidfija(15);
 				mov[0][0] = 50;
 				mov[0][1] = 375;
 				io.sockets.emit("mov.fichas.fijo", mov[0][0], mov[0][1], jugador[0].getpieza());
 			}
 		}else if(num==3){
 			if(turno==0){
-				jugador[1].setid(10);
+				jugador[1].setidfija(10);
 				jugador[1].impuestos(50);
 				mov[1][0] = 50;
 				mov[1][1] = 700;
 				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
 				socket.emit("alquiler/impuestos", jugador[1].getdinero());
 			}else{
-				jugador[0].setid(10);
+				jugador[0].setidfija(10);
 				jugador[0].impuestos(50);
 				mov[0][0] = 50;
 				mov[0][1] = 700;
@@ -394,14 +394,14 @@ io.on('connection', function(socket) {
 			}
 		}else if(num==6){
 			if(turno==0){
-				jugador[1].setid(38);
+				jugador[1].setidfija(38);
 				jugador[1].impuestos(500);
 				mov[1][0] = 700;
 				mov[1][1] = 570;
 				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
 				socket.emit("alquiler/impuestos", jugador[1].getdinero());
 			}else{
-				jugador[0].setid(38);
+				jugador[0].setidfija(38);
 				jugador[0].impuestos(500);
 				mov[0][0] = 700;
 				mov[0][1] = 570;
@@ -433,14 +433,14 @@ io.on('connection', function(socket) {
 			}
 		}else if(num==1){
 			if(turno==0){
-				jugador[1].setid(39);
+				jugador[1].setidfija(39);
 				jugador[1].impuestos(400);
 				mov[1][0] = 700;
 				mov[1][1] = 635;
 				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
 				socket.emit("alquiler/impuestos", jugador[1].getdinero());			
 			}else{
-				jugador[0].setid(39);
+				jugador[0].setidfija(39);
 				jugador[0].impuestos(400);
 				mov[0][0] = 700;
 				mov[0][1] = 635;
@@ -491,14 +491,14 @@ io.on('connection', function(socket) {
 			}			
 		}else{
 			if(turno==0){
-				jugador[1].setid(0);
+				jugador[1].setidfija(0);
 				jugador[1].banca(400);
 				mov[1][0] = 700;
 				mov[1][1] = 700;
 				io.sockets.emit("mov.fichas.fijo", mov[1][0], mov[1][1], jugador[1].getpieza());
 				socket.emit("alquiler/impuestos", jugador[1].getdinero());			
 			}else{
-				jugador[0].setid(0);
+				jugador[0].setidfija(0);
 				jugador[0].impuestos(400);
 				mov[0][0] = 700;
 				mov[0][1] = 635;

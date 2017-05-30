@@ -7,7 +7,7 @@ router.get("/", function(req, res){
 	res.render("pages/index");
 });
 router.get("/chat", function(req, res){
-	res.render("pages/chat");
+	res.render("pages/partida");
 });
 router.get("/juego", function(req, res){
 	res.render("pages/tablero");

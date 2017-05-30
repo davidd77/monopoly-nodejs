@@ -53,6 +53,15 @@ font-size: 70px;
 	padding: 0 60px 0 60px !important;
 }
 
+.marcador{
+	text-align: center;
+}
+
+.lat-izq{
+	margin: 0 !important; 
+	padding: 0 !important;
+}
+
 .lat-der{
 	float: right;
 }
@@ -68,4 +77,26 @@ font-size: 70px;
 .dados{
 	margin: 15px 0 0 0 !important;
 	padding: 0 !important;
+}
+
+#messages{
+	height: 700px;
+	overflow-y: auto;
+}
+
+.compras{
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+@media (max-width: 1000px){
+	.mostrar-casilla{
+		margin-left: 35%;
+	}
+}
+
+@media (min-width: 1000px){
+	.mostrar-casilla{
+		width: 100%;
+	}
 }
