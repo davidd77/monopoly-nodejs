@@ -1,0 +1,17 @@
+Instrucciones
+
+Para 2 Jugadores
+
+Los 2 jugadores empiezan con una cantidad de 1500€.
+
+El primer jugador conectado tendra el primer turno. Los turnos se cambian automaticamente una vez se le ha dado a los dados, si se quiere hacer algun movimiento como hipotecar se tendra que hacer antes de darle a los dados.
+
+Cuando un jugador caiga en una casilla sin propietario tendra la opcion de comprar y no comprar. Si se intenta comprar cuando no tienes suficiente dinero no se le dejara comprar.
+
+Cuando un jugador caiga en una casilla con propietario se comprobara si es suya o del otro jugador. Si es suya no pasara nada pero si es del otro jugador se le cobrara automaticamente el dinero y el otro jugador lo cobrara.
+
+Un jugador solo puede hipotecar las propiedades que tenga compradas y deshipotecar las propiedades que tenga hipotecadas.
+
+La partida acabara cuando uno de los 2 se desconecte o llege a una cantidad de dinero negativo. No se le dara la opcion de hipotecar antes de perder la partida hay que ser previsor y hipotecar antes de lanzar los dados si se cree que se puede perder la partida en la siguiente jugada.
+
+En todo momento los jugadores y espectadores podran hablar entre ellos en el chat que se encuentra en el lateral derecho del tablero.
